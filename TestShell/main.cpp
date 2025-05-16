@@ -1,8 +1,13 @@
+#include "gmock/gmock.h"
 #include <iostream>
 
 int main(int argc, char** argv) {
 	
 	std::string cmd;
+
+	::testing::InitGoogleMock();
+	RUN_ALL_TESTS();
+
 	while (true) {
 		std::cout << "shell> ";
 		std::cin >> cmd;
@@ -27,6 +32,7 @@ int main(int argc, char** argv) {
 		else {
 			std::cout << "Invalid command. Please try again." << std::endl;
 		}
-
 	}
+	
+	return 0;
 }
