@@ -62,7 +62,7 @@ void SSD::write(int idx, int value) {
 	}
 
 	for (int i = 0; i < 100; i++) {
-		outfile << dec << i << " 0x" << hex << storage[i] << endl;
+		outfile << dec << i << " 0x" << hex << uppercase << storage[i] << endl;
 	}
 
 	outfile.close();
@@ -75,7 +75,7 @@ unsigned SSD::read(int idx) {
 		return 0;
 	}
 
-	outfile << "0x" << hex << storage[idx] << endl;
+	outfile << "0x" << hex << uppercase << storage[idx] << endl;
 
 	outfile.close();
 	return storage[idx];
