@@ -59,7 +59,9 @@ void SSD::write(int idx, int value) {
 		return;
 	}
 
-	file.seekp((LINE_LENGTH + 1)*idx, std::ios::beg);
+	file.seekp((LINE_LENGTH + 1) * idx, std::ios::beg);
+	file << std::string(20, ' ');
+	file.seekp((LINE_LENGTH + 1) * idx, std::ios::beg);
 	file << std::left << std::dec<< idx << " 0x" << std::hex << storage[idx];
 	storage[idx] = value;
 }
