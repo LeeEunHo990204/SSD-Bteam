@@ -129,13 +129,18 @@
   <ItemGroup>
     <ClCompile Include="cmd_launcher.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Shell.cpp" />
+    <ClCompile Include="shell_test.cpp" />
+    <ClCompile Include="TestScripts.cpp" />
     <ClCompile Include="test_cmdLauncher.cpp" />
+    <ClCompile Include="test_scripts.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test.h" />
+    <ClInclude Include="TestScripts.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
