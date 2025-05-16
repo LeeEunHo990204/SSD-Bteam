@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
         cerr << "LBA Out of Range" << endl;
         return 1;
     }
-    Ssd ssd;
+    SSD ssd;
     
     cout << "CMD :" << cmd << endl;
     cout << "argc :" << argc << endl;
