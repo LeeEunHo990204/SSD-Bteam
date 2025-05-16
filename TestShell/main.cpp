@@ -1,8 +1,19 @@
-#include <iostream>
+#include "test.h"
+#ifdef MOCK_TEST
+#include "gmock/gmock.h"
+#endif
 
+#include <iostream>
+#ifdef MOCK_TEST
+int main() {
+	::testing::InitGoogleMock();
+	return RUN_ALL_TESTS();
+}
+#else
 int main(int argc, char** argv) {
 	
 	std::string cmd;
+
 	while (true) {
 		std::cout << "shell> ";
 		std::cin >> cmd;
@@ -30,3 +41,4 @@ int main(int argc, char** argv) {
 
 	}
 }
+#endif
