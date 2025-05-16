@@ -9,11 +9,15 @@
 
 using namespace std;
 
-class Ssd {
+class SSD {
 public:
-	void init(void);
+	SSD();
 	void write(int idx, int value);
 	unsigned int read(int idx);
 private:
 	unsigned int storage[100] = { 0, };
+	const string filename = "ssd_nand.txt";
+	ifstream file;
+
+	void init(void);
 };

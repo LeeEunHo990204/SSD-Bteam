@@ -1,11 +1,12 @@
 #include "ssd.h"
 
-void Ssd::init(void) {
-	string filename = "ssd_nand.txt";
+SSD::SSD(void) {
+	init();
+}
 
-	ifstream file(filename);
-	string line;
-	
+void SSD::init(void) {
+	file.open(filename);
+
 	if (!file.is_open()) {
 		ofstream outfile(filename);
 		if (!outfile.is_open()) {
@@ -25,6 +26,8 @@ void Ssd::init(void) {
 			return;
 		}
 	}
+
+	string line;
 
 	for (int i = 0; i < 100; i++) {
 		getline(file, line);
@@ -49,10 +52,10 @@ void Ssd::init(void) {
 	}
 }
 
-void Ssd::write(int idx, int value) {
+void SSD::write(int idx, int value) {
 	storage[idx] = value;
 }
 
-unsigned Ssd::read(int idx) {
+unsigned SSD::read(int idx) {
 	return storage[idx];
 }
