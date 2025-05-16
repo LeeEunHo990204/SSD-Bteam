@@ -1,9 +1,14 @@
+
 #include "gmock/gmock.h"
 #include <iostream>
 #include "Shell.cpp"
 using namespace testing;
 
+
+#include <iostream>
+
 int main(int argc, char** argv) {
+
 #if defined(_DEBUG)
 	InitGoogleMock();
 	return RUN_ALL_TESTS();
