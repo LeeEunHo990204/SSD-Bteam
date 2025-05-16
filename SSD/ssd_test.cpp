@@ -33,3 +33,8 @@ TEST(SsdTest, read4) {
 	SSD ssd;
 	EXPECT_EQ(0x12345678, ssd.read(2));
 }
+
+TEST(SsdTest, read5) {
+	SSD ssd;
+	EXPECT_EQ(0, ssd.read(3));
+}

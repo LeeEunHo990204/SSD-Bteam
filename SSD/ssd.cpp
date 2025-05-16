@@ -54,8 +54,29 @@ void SSD::init(void) {
 
 void SSD::write(int idx, int value) {
 	storage[idx] = value;
+
+	ofstream outfile(filename, ios::out | ios::trunc);
+	if (!outfile.is_open()) {
+		std::cerr << "파일 생성에 실패했습니다!" << std::endl;
+		return;
+	}
+
+	for (int i = 0; i < 100; i++) {
+		outfile << dec << i << " 0x" << hex << storage[i] << endl;
+	}
+
+	outfile.close();
 }
 
 unsigned SSD::read(int idx) {
+	ofstream outfile("ssd_output.txt", ios::out | ios::trunc);
+	if (!outfile.is_open()) {
+		std::cerr << "파일 생성에 실패했습니다!" << std::endl;
+		return 0;
+	}
+
+	outfile << "0x" << hex << storage[idx] << endl;
+
+	outfile.close();
 	return storage[idx];
 }

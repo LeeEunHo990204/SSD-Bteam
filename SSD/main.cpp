@@ -36,10 +36,10 @@ int main(int argc, char* argv[]) {
     }
     SSD ssd;
     
-    cout << "CMD :" << cmd << endl;
-    cout << "argc :" << argc << endl;
+    //cout << "CMD :" << cmd << endl;
+    //cout << "argc :" << argc << endl;
     if (cmd == "R") {
-        ssd.read(address);
+        cout << "0x" << hex << ssd.read(address) << endl;
     }
     else if (cmd == "W") {
         if (argc < 4) {
@@ -53,7 +53,6 @@ int main(int argc, char* argv[]) {
 
         unsigned int data = std::stoul(argv[3], nullptr, 16);
         ssd.write(address, data);
-        
     }
     else {
         cerr << "Unknown command: " << cmd << endl;
