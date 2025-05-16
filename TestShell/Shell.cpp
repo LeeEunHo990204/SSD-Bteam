@@ -3,10 +3,26 @@
 #include <vector>
 #include <string>
 
-struct Command {
-	bool isValid;
+class Command {
+public:
 	std::string cmd;
 	std::vector<std::string> params;
+
+	Command(std::vector<std::string> words) {
+		isValid = false;
+		if (words.size() == 0) {
+			return;
+		}
+		cmd = words[0];
+		params.assign(words.begin() + 1, words.end());
+	}
+
+	bool getValid() {
+		return isValid;
+	}
+
+private:
+	bool isValid;
 };
 
 class Shell {
@@ -18,25 +34,25 @@ public:
 			std::getline(std::cin, cmdLine);
 
 			std::vector<std::string> words = splitBySpace(cmdLine);
-			Command command = makeCommand(words);
-			if (command.isValid == false) {
-				// std::cout << "INVALID COMMAND" << std::endl;
+			Command* command = new Command(words);
+			if (command->getValid() == false) {
+				std::cout << "INVALID COMMAND" << std::endl;
 				continue;
 			}
 
-			if (command.cmd == "write" || command.cmd == "WRITE") {
+			if (command->cmd == "write" || command->cmd == "WRITE") {
 				std::cout << "Write Test." << std::endl;
 				//TODO
 				//system("./SSD write [LBA] [DATA]");
 			}
 
-			else if (command.cmd == "read" || command.cmd == "READ") {
+			else if (command->cmd == "read" || command->cmd == "READ") {
 				std::cout << "Read Test." << std::endl;
 				//TODO
 				//system("./SSD read [LBA]");
 			}
 
-			else if (command.cmd == "exit") {
+			else if (command->cmd == "exit") {
 				std::cout << "exit!!" << std::endl;
 				break;
 			}
@@ -63,17 +79,5 @@ private:
 		}
 
 		return result;
-	}
-
-	Command makeCommand(std::vector<std::string> words) {
-		Command command;
-		if (words.size() == 0) {
-			command.isValid = false;
-			return command;
-		}
-		command.cmd = words[0];
-		command.params.assign(words.begin() + 1, words.end());
-
-		return command;
 	}
 };
