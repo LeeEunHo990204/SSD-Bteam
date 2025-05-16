@@ -17,7 +17,7 @@ public:
 private:
 	unsigned int storage[100] = { 0, };
 	const string filename = "ssd_nand.txt";
-	ifstream file;
-
+	fstream file;
+	const int LINE_LENGTH = 20;
 	void init(void);
 };

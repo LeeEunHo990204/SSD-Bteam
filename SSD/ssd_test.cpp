@@ -11,6 +11,7 @@ TEST(SsdTest, constructor) {
 TEST(SsdTest, write1) {
 	SSD ssd;
 	ssd.write(0, 0x123);
+	ssd.write(60, 0x456);
 }
 
 TEST(SsdTest, read1) {
@@ -26,10 +27,12 @@ TEST(SsdTest, read2) {
 
 TEST(SsdTest, read3) {
 	SSD ssd;
+	ssd.write(1, 0x123);
 	EXPECT_EQ(0x123, ssd.read(1));
 }
 
 TEST(SsdTest, read4) {
 	SSD ssd;
+	ssd.write(2, 0x12345678);
 	EXPECT_EQ(0x12345678, ssd.read(2));
 }
