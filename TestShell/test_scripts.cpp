@@ -1,6 +1,13 @@
 #include "gmock/gmock.h"
 #include "TestScripts.h"
 
+
+class MockLauncher : public ICmdLauncher {
+public:
+	MOCK_METHOD(void, write, (int LBA, unsigned int val), (override));
+	MOCK_METHOD(unsigned int, read, (int LBA), (override));
+};
+
 class TestScriptsFixture : public ::testing::Test
 {
 public:
@@ -26,6 +33,7 @@ public:
 	std::string TS3_NAME = "3_PartialLBARead";
 
 	SSDCmdLauncher ssdCmdLauncher;
+	MockLauncher mockCmdLauncher;
 };
 
 TEST_F(TestScriptsFixture, TestCreateTS1instance)
@@ -93,6 +101,3 @@ TEST_F(TestScriptsFixture, TestCreateTS3WithLauncher)
 
 	deleteTS();
 }
-
-
-
