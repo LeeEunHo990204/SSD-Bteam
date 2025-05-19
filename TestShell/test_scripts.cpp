@@ -18,7 +18,21 @@ public:
 
 	void factoryCreateTSWithLauncher(std::string tsName, ICmdLauncher* launcher)
 	{
-		testScripts = new TestScripts1(tsName, launcher);
+		if (tsName == TS1_NAME) {
+			testScripts = new TestScripts1(tsName, launcher);
+		}
+		else if (tsName == TS2_NAME) {
+			testScripts = new TestScripts2(tsName, launcher);
+		} 
+		else if (tsName == TS3_NAME) {
+			testScripts = new TestScripts3(tsName, launcher);
+		}
+		else if (tsName == BASIC_NAME){
+			testScripts = new TestScripts1(tsName, launcher);
+		}
+		else {
+			testScripts = nullptr;
+		}
 	}
 	
 	void deleteTS() {
@@ -179,7 +193,7 @@ TEST_F(TestScriptsFixture, TestScript1)
 {
 	//Arrange
 	int counter = 0;
-	factoryCreateTSWithLauncher(BASIC_NAME, &mockLauncher);
+	factoryCreateTSWithLauncher(TS1_NAME, &mockLauncher);
 
 	EXPECT_CALL(mockLauncher, write(::testing::_, ::testing::_))
 		.Times(100);
@@ -194,3 +208,30 @@ TEST_F(TestScriptsFixture, TestScript1)
 	//Assert
 	EXPECT_EQ(testResult, TEST_PASS);
 }
+
+TEST_F(TestScriptsFixture, TestScript2)
+{
+	int pattern[] = { 0x400, 0x000, 0x300, 0x100, 0x200 };
+	int call_count = 0;
+	
+	//Arrange
+	factoryCreateTSWithLauncher(TS2_NAME, &mockLauncher);
+
+	EXPECT_CALL(mockLauncher, write(::testing::_, ::testing::_))
+		.Times(150);
+	EXPECT_CALL(mockLauncher, read(::testing::_))
+		.Times(150)
+		.WillRepeatedly(testing::Invoke([&call_count, &pattern](int) {
+		int ret = pattern[call_count % 5];
+		++call_count;
+		return ret;
+			}));
+
+	//Act
+	testScripts->runTestScenario();
+	int testResult = testScripts->getResult();
+
+	//Assert
+	EXPECT_EQ(testResult, TEST_PASS);
+}
+

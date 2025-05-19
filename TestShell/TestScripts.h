@@ -29,7 +29,7 @@ public:
 			return READ_COMPARE_DATA_MATCH; //OK: data match
 		}
 	}
-	virtual void setTestScenario() = 0;
+	
 	virtual void runTestScenario() = 0;
 	
 	int getResult() { return testResult; }
@@ -50,6 +50,26 @@ public:
 	TestScripts1(std::string name) : ITestScripts(name) {}
 	TestScripts1(std::string name, ICmdLauncher* cmdLauncher) : ITestScripts(name, cmdLauncher) {}
 	
-	void setTestScenario() override;
+
+	void runTestScenario() override;
+};
+
+class TestScripts2 : public ITestScripts
+{
+public:
+	TestScripts2() : ITestScripts("TestScript2") {}
+	TestScripts2(std::string name) : ITestScripts(name) {}
+	TestScripts2(std::string name, ICmdLauncher* cmdLauncher) : ITestScripts(name, cmdLauncher) {}
+
+	void runTestScenario() override;
+};
+
+class TestScripts3 : public ITestScripts
+{
+public:
+	TestScripts3() : ITestScripts("TestScript3") {}
+	TestScripts3(std::string name) : ITestScripts(name) {}
+	TestScripts3(std::string name, ICmdLauncher* cmdLauncher) : ITestScripts(name, cmdLauncher) {}
+
 	void runTestScenario() override;
 };
