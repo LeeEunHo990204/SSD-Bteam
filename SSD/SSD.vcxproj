@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="command_parser.cpp" />
+    <ClCompile Include="device_controller.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ssd.cpp" />
     <ClCompile Include="ssd_test.cpp" />
@@ -138,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="command_parser.h" />
+    <ClInclude Include="device_controller.h" />
     <ClInclude Include="device.h" />
     <ClInclude Include="mock.h" />
     <ClInclude Include="ssd.h" />

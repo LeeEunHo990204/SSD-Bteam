@@ -2,6 +2,7 @@
 #include "ssd.h"
 #include "command_parser.h"
 #include "mock.h"
+#include "device_controller.h"
 
 using namespace testing;
 using namespace std;
@@ -108,4 +109,29 @@ TEST(SsdTest, InvalidWriteCommandParsing)
 	CommandParser parser(argv.size(), argv.data());
 
 	EXPECT_FALSE(parser.isValid());
+}
+
+TEST_F(SsdTestFixture, DeviceControllerValidWriteAndReadTest)
+{
+	std::vector<std::string> args = { "SSD.exe", "W", "1", "12345678" };
+	std::vector<char*> argv;
+	for (auto& s : args) argv.push_back(const_cast<char*>(s.c_str()));
+	CommandParser parser(argv.size(), argv.data());
+	CommandInfo commandInfo = parser.getCommandInfo();
+
+	DeviceController deviceController(&ssd);
+	
+	EXPECT_EQ(deviceController.run(commandInfo), 0);	// run 수행 결과 이상 없음 확인
+
+	args = { "SSD.exe", "R", "1" };  
+	argv.clear();
+	for (auto& s : args) argv.push_back(const_cast<char*>(s.c_str()));
+
+	CommandParser parser2(argv.size(), argv.data());
+	commandInfo = parser.getCommandInfo();
+
+	EXPECT_EQ(deviceController.run(commandInfo), 0);	// run 수행 결과 이상 없음 확인
+
+	
+
 }
