@@ -4,12 +4,15 @@
 
 #define READ_COMPARE_DATA_MISMATCH (-1)
 #define READ_COMPARE_DATA_MATCH (0)
+#define TEST_PASS (0)
+#define TEST_FAIL (1)
+#define MAX_LBA_NUM (100)
 
 class ITestScripts
 {
 public:
-	ITestScripts() : scriptName(""), testResult(0) {}
-	ITestScripts(std::string name) : scriptName(name), testResult(0) {}
+	ITestScripts() : scriptName(""), testResult(TEST_PASS) {}
+	ITestScripts(std::string name) : scriptName(name), testResult(TEST_PASS) {}
 	ITestScripts(std::string name, ICmdLauncher* cmdLauncher) : scriptName(name) {
 		testResult = 0;
 		cmdLauncer = new ShellDeviceDriver(cmdLauncher);
@@ -19,6 +22,7 @@ public:
 		getShellDev()->write(lba, data);
 
 		if (data != getShellDev()->read(lba)) {
+			testResult = TEST_FAIL;
 			return READ_COMPARE_DATA_MISMATCH; //ERROR: data mismatch
 		}
 		else {

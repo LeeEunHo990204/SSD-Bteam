@@ -1,7 +1,6 @@
 #include "gmock/gmock.h"
 #include "TestScripts.h"
 
-
 class MockLauncher : public ICmdLauncher {
 public:
 	MOCK_METHOD(void, write, (int LBA, unsigned int val), (override));
@@ -155,7 +154,6 @@ TEST_F(TestScriptsFixture, TestReadCompareDataMatch)
 
 	//Assert
 	EXPECT_EQ(readCompareResult, READ_COMPARE_DATA_MATCH);
-
 	deleteTS();
 }
 
@@ -174,5 +172,25 @@ TEST_F(TestScriptsFixture, TestReadCompareDataMisMatch)
 
 	//Assert
 	EXPECT_EQ(readCompareResult, READ_COMPARE_DATA_MISMATCH);
+	deleteTS();
 }
 
+TEST_F(TestScriptsFixture, TestScript1)
+{
+	//Arrange
+	int counter = 0;
+	factoryCreateTSWithLauncher(BASIC_NAME, &mockLauncher);
+
+	EXPECT_CALL(mockLauncher, write(::testing::_, ::testing::_))
+		.Times(100);
+	EXPECT_CALL(mockLauncher, read(::testing::_))
+		.Times(100)
+		.WillRepeatedly(testing::Invoke([&counter](int) { return counter++; }));
+
+	//Act
+	testScripts->runTestScenario();
+	int testResult = testScripts->getResult();
+
+	//Assert
+	EXPECT_EQ(testResult, TEST_PASS);
+}
