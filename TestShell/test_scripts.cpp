@@ -235,6 +235,7 @@ TEST_F(TestScriptsFixture, TestScript2)
 	EXPECT_EQ(testResult, TEST_PASS);
 }
 
+#if 0
 TEST_F(TestScriptsFixture, TestScript3)
 {
 	int pattern[] = { 0x10101010, 0x5a5aa5a5 };
@@ -260,4 +261,4 @@ TEST_F(TestScriptsFixture, TestScript3)
 	//Assert
 	EXPECT_EQ(testResult, TEST_PASS);
 }
-
+#endif

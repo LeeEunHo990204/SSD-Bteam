@@ -17,13 +17,23 @@ void TestScripts2::runTestScenario() {
 		readCompare(2, 0x200);
 	}
 }
+static uint32_t getRandomUint32() {
+	static std::random_device rd;
+	static std::mt19937 gen(rd());
+	static std::uniform_int_distribution<uint32_t> dist(0, 0xFFFFFFFF);
+	return dist(gen);
+}
 
 void TestScripts3::runTestScenario() {
 	int loopCnt = 0;
 
+	uint32_t randomVal;
+
 	//TODO: Need to meet requirements
 	for (loopCnt = 0; loopCnt < 200; loopCnt++) {
-		readCompare(0, 0x10101010);
-		readCompare(99, 0x5a5aa5a5);
+		randomVal = getRandomUint32();
+		readCompare(0, randomVal);
+		randomVal = getRandomUint32();
+		readCompare(99, randomVal);
 	}
 }

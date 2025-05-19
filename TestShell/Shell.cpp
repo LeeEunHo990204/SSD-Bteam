@@ -18,7 +18,7 @@ public:
 			"fullread", "FULLREAD", 
 			"1_", "1_FullWriteAndReadCompare", 
 			"2_", "2_PartialLBAWrite", 
-			"3_", "3_WriteReadAging"
+			"3_", "3_WriteReadAging",
 			"exit", "EXIT",
 			"help", "HELP"
 		};
@@ -96,6 +96,10 @@ public:
 		cmdLauncher(cmdLauncher), testScripts(testScripts) {
 	}
 
+	Shell(ICmdLauncher* cmdLauncher) : cmdLauncher(cmdLauncher) {
+		testScripts = nullptr;
+	}
+
 	void run() {
 		std::string cmdLine;
 		while (true) {
@@ -137,7 +141,7 @@ public:
 		}
 
 		else if (command->cmd == "fullwrite" || command->cmd == "FULLWRITE") {
-			unsigned int val = stoul(command->params[0]);
+			unsigned int val = stoul(command->params[0], nullptr, 16);
 			for (int LBA = 0; LBA < 100; LBA++) {
 				cmdLauncher->write(LBA, val);
 			}
@@ -161,14 +165,14 @@ public:
 		}
 
 		else if (command->cmd == "2_" || command->cmd == "2_PartialLBAWrite") {
-			//setTestScripts(new TestScripts2);
+			setTestScripts(new TestScripts2("2_PartialLBAWrite", cmdLauncher));
 			testScripts->runTestScenario();
 			if (testScripts->getResult() == 0) return "PASS";
 			return "FAIL";
 		}
 
 		else if (command->cmd == "3_" || command->cmd == "3_WriteReadAging") {
-			//setTestScripts(new TestScripts3);
+			setTestScripts(new TestScripts3("3_WriteReadAging", cmdLauncher));
 			testScripts->runTestScenario();
 			if (testScripts->getResult() == 0) return "PASS";
 			return "FAIL";
