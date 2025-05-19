@@ -25,15 +25,10 @@ int test_shell(void) {
 			continue;
 		}
 
-		if (address < 0 || address > 99)
-		{
-			cerr << "LBA Out of Range" << endl;
-			return 1;
-		}
 		SSD ssd;
 
 		if (cmd == "R") {
-			cout << "0x" << setw(8) << setfill('0') << hex << uppercase << ssd.read(address) << endl;
+			ssd.read(address);
 		}
 		else if (cmd == "W") {
 			unsigned int data = 0;
