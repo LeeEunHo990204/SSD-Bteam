@@ -37,7 +37,7 @@ public:
         //system("cp)
         if ((LBA >= 100) || (LBA < 0))
             return 0;
-        ifstream infile("ssd_output.txt");
+    
         string fileName = "SSD.exe";
         string command = fileName + " R " + to_string(LBA);
         system(command.c_str());
