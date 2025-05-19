@@ -1,18 +1,39 @@
 #include "TestScripts.h"
 
-
-int TestScripts1::readCompare(int lba, int data) {
-	return 0;
-}
-
-void TestScripts1::setTestScenario() {
-
-}
-
 void TestScripts1::runTestScenario() {
-
+	for (int i = 0; i < MAX_LBA_NUM; i++) {
+		readCompare(i, i);
+	}
 }
 
-int TestScripts1::getResult() {
-	return 0;
+void TestScripts2::runTestScenario() {
+	int loopCnt = 0;
+
+	for (loopCnt = 0; loopCnt < 30; loopCnt++) {
+		readCompare(4, 0x400);
+		readCompare(0, 0x000);
+		readCompare(3, 0x300);
+		readCompare(1, 0x100);
+		readCompare(2, 0x200);
+	}
+}
+static uint32_t getRandomUint32() {
+	static std::random_device rd;
+	static std::mt19937 gen(rd());
+	static std::uniform_int_distribution<uint32_t> dist(0, 0xFFFFFFFF);
+	return dist(gen);
+}
+
+void TestScripts3::runTestScenario() {
+	int loopCnt = 0;
+
+	uint32_t randomVal;
+
+	//TODO: Need to meet requirements
+	for (loopCnt = 0; loopCnt < 200; loopCnt++) {
+		randomVal = getRandomUint32();
+		readCompare(0, randomVal);
+		randomVal = getRandomUint32();
+		readCompare(99, randomVal);
+	}
 }
