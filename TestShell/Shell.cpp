@@ -18,7 +18,7 @@ public:
 			"fullread", "FULLREAD", 
 			"1_", "1_FullWriteAndReadCompare", 
 			"2_", "2_PartialLBAWrite", 
-			"3_", "3_WriteReadAging"
+			"3_", "3_WriteReadAging",
 			"exit", "EXIT",
 			"help", "HELP"
 		};

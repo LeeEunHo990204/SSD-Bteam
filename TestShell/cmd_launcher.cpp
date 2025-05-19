@@ -32,11 +32,11 @@ public:
     }
     unsigned int read(int LBA) override {
         //system("cp)
-        ifstream infile("ssd_output.txt");
         string fileName = "SSD.exe";
         string command = fileName + " R " + to_string(LBA);
         system(command.c_str());
 
+        ifstream infile("ssd_output.txt");
         string str;
         unsigned int data = 0;
         infile >> str;
