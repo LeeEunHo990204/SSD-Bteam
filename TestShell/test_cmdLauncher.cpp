@@ -1,3 +1,4 @@
+#include "test.h"
 #include "gmock/gmock.h"
 #include "cmd_launcher.cpp"
 
@@ -27,11 +28,16 @@ class UtFixture : public Test {
 public:
     MockCmdLauncher  mockCmdLauncher;
     SSDCmdLauncher  ssdCmdLauncher;
+#ifdef   MOCK_TEST
     ShellDeviceDriver cmdLauncher{ &mockCmdLauncher };
+#else
+    ShellDeviceDriver cmdLauncher{ &ssdCmdLauncher };
+#endif
 };
 
 TEST_F(UtFixture, RWTestPass) {
     cmdLauncher.write(3, 0x12345678);
+    cout << cmdLauncher.read(3) << endl;
     EXPECT_EQ(0x12345678, cmdLauncher.read(3));
 }
 
