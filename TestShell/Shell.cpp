@@ -2,8 +2,50 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <unordered_map>
 #include "cmd_launcher.cpp"
 #include "TestScripts.h"
+
+class Validation {
+public:
+	Validation() {
+		paramCntMap = {
+			{"write", 2}, {"WRITE", 2},
+			{"read", 1}, {"READ", 1},
+			{"fullwrite", 1}, {"FULLWRITE", 1},
+			{"fullread", 0}, {"FULLREAD", 0},
+			{"1_", 0}, {"1_FullWriteAndReadCompare", 0},
+			{"2_", 0}, {"2_PartialLBAWrite", 0},
+			{"3_", 0}, {"3_WriteReadAging", 0}
+		};
+	}
+
+	bool isValid(const std::string& cmd, const std::vector<std::string>& params) {
+		if (paramCntMap.count(cmd) == 0) return true;
+		int paramCnt = params.size();
+		if (isValidParamCnt(cmd, paramCnt) == false) return false;
+		if(cmd == "write" || cmd == "WRITE" || cmd == "fullwrite" || cmd == "FULLWRITE")
+			return isValidValue(params[paramCnt - 1]);
+		return true;
+	}
+
+private:
+	std::unordered_map<std::string, int> paramCntMap;
+	
+	bool isValidParamCnt(const std::string& cmd, const int& paramCnt) {
+		if (paramCntMap.count(cmd) == 0) return true;
+		return paramCntMap[cmd] == paramCnt;
+	}
+
+	bool isValidValue(const std::string& val) {
+		return (val.length() == 10) && startsWith(val, "0x");
+	}
+
+	bool startsWith(const std::string& str, const std::string& prefix) {
+		return str.size() >= prefix.size() &&
+			str.compare(0, prefix.size(), prefix) == 0;
+	}
+};
 
 class Command {
 public:
@@ -18,47 +60,8 @@ public:
 		cmd = words[0];
 		params.assign(words.begin() + 1, words.end());
 
-		if (cmd == "write" || cmd == "WRITE") {
-			if (params.size() == 2 && isValidValue(params[1])) {
-				isValid = true;
-			}
-		}
-		else if (cmd == "read" || cmd == "READ") {
-			if (params.size() == 1) {
-				isValid = true;
-			}
-		}
-		else if (cmd == "exit" || cmd == "EXIT") {
-			return;
-		}
-		else if (cmd == "help" || cmd == "HELP") {
-			return;
-		}
-		else if (cmd == "fullwrite" || cmd == "FULLWRITE") {
-			if (params.size() == 1 && isValidValue(params[0])) {
-				isValid = true;
-			}
-		}
-		else if (cmd == "fullread" || cmd == "FULLREAD") {
-			if (params.size() == 0) {
-				isValid = true;
-			}
-		}
-		else if (cmd == "1_" || cmd == "1_FullWriteAndReadCompare") {
-			if (params.size() == 0) {
-				isValid = true;
-			}
-		}
-		else if (cmd == "2_" || cmd == "2_PartialLBAWrite") {
-			if (params.size() == 0) {
-				isValid = true;
-			}
-		}
-		else if (cmd == "3_" || cmd == "3_WriteReadAging") {
-			if (params.size() == 0) {
-				isValid = true;
-			}
-		}
+		Validation* validation = new Validation();
+		isValid = validation->isValid(cmd, params);
 	}
 
 	bool getValid() {
@@ -67,19 +70,13 @@ public:
 
 private:
 	bool isValid;
-	bool isValidValue(const std::string& val) {
-		return (val.length() == 10) && startsWith(val, "0x");
-	}
-	bool startsWith(const std::string& str, const std::string& prefix) {
-		return str.size() >= prefix.size() &&
-			str.compare(0, prefix.size(), prefix) == 0;
-	}
 };
 
 class Shell {
 public:
-	Shell(ICmdLauncher* cmdLauncher, ITestScripts* testScripts) : 
-		cmdLauncher(cmdLauncher), testScripts(testScripts) {}
+	Shell(ICmdLauncher* cmdLauncher, ITestScripts* testScripts) :
+		cmdLauncher(cmdLauncher), testScripts(testScripts) {
+	}
 
 	void run() {
 		std::string cmdLine;
