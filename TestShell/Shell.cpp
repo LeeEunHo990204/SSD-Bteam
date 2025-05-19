@@ -32,7 +32,10 @@ public:
 
 	bool isValid(const std::string& cmd, const std::vector<std::string>& params) {
 		if (cmdSet.count(cmd) == 0) return false;
+		
+		// EXIT, HELP
 		if (paramCntMap.count(cmd) == 0) return true;
+
 		int paramCnt = params.size();
 		if (isValidParamCnt(cmd, paramCnt) == false) return false;
 		if (cmd == "write" || cmd == "WRITE" || cmd == "fullwrite" || cmd == "FULLWRITE")
@@ -96,14 +99,14 @@ public:
 			std::cout << "shell> ";
 			std::getline(std::cin, cmdLine);
 
-			std::string result = runOneCommand(cmdLine);
+			std::string result = runCommand(cmdLine);
 			if (result == "EXIT") break;
 			else if (result == "HELP") continue;
 			std::cout << result << std::endl;
 		}
 	}
 
-	std::string runOneCommand(std::string cmdLine) {
+	std::string runCommand(std::string cmdLine) {
 		std::vector<std::string> words = splitBySpace(cmdLine);
 		Command* command = new Command(words);
 		if (command->getValid() == false) {
