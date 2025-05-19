@@ -151,7 +151,7 @@ public:
 		}
 
 		else if (command->cmd == "1_" || command->cmd == "1_FullWriteAndReadCompare") {
-			setTestScripts(new TestScripts1);
+			setTestScripts(new TestScripts1("1_FullWriteAndReadCompare", cmdLauncher));
 			testScripts->runTestScenario();
 			if (testScripts->getResult() == 0) return "PASS";
 			return "FAIL";
