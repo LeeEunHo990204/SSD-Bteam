@@ -44,6 +44,21 @@ public:
 				isValid = true;
 			}
 		}
+		else if (cmd == "1_" || cmd == "1_FullWriteAndReadCompare") {
+			if (params.size() == 0) {
+				isValid = true;
+			}
+		}
+		else if (cmd == "2_" || cmd == "2_PartialLBAWrite") {
+			if (params.size() == 0) {
+				isValid = true;
+			}
+		}
+		else if (cmd == "3_" || cmd == "3_WriteReadAging") {
+			if (params.size() == 0) {
+				isValid = true;
+			}
+		}
 	}
 
 	bool getValid() {
@@ -121,6 +136,26 @@ public:
 			}
 			return result;
 		}
+
+		else if (command->cmd == "1_" || command->cmd == "1_FullWriteAndReadCompare") {
+			setTestScripts(new TestScripts1);
+			testScripts->runTestScenario();
+			return "TestScripts1";
+		}
+
+		else if (command->cmd == "2_" || command->cmd == "2_PartialLBAWrite") {
+			//setTestScripts(new TestScripts2);
+			testScripts->runTestScenario();
+		}
+
+		else if (command->cmd == "3_" || command->cmd == "3_WriteReadAging") {
+			//setTestScripts(new TestScripts3);
+			testScripts->runTestScenario();
+		}
+	}
+
+	void setTestScripts(ITestScripts* testScripts) {
+		this->testScripts = testScripts;
 	}
 
 private:

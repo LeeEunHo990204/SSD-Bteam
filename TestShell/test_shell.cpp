@@ -57,3 +57,8 @@ TEST_F(ShellFixture, read) {
 	std::string actual = shell->runOneCommand("READ 1");
 	EXPECT_EQ("[Read] LBA 1 : 0\n", actual);
 }
+
+TEST_F(ShellFixture, testscripts1) {
+	std::string actual = shell->runOneCommand("1_");
+	EXPECT_EQ("TestScripts1", actual);
+}
