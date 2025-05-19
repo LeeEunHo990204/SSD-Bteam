@@ -57,16 +57,16 @@ int main(int argc, char* argv[]) {
 	CommandParser commandParser(argc, argv);
 	SSD ssd;
 
-	cout << "[logging] CMD :" << commandParser.getCommand() << endl;
+	cout << "[logging] CMD :" << commandParser.getCommandInfo().command << endl;
 	cout << "[logging] argc :" << argc << endl;
-	if (commandParser.getCommand() == "R") {
-		ssd.read(commandParser.getLBA());
+	if (commandParser.getCommandInfo().command == "R") {
+		ssd.read(commandParser.getCommandInfo().address);
 	}
-	else if (commandParser.getCommand() == "W") {
-		ssd.write(commandParser.getLBA(), commandParser.getData());
+	else if (commandParser.getCommandInfo().command == "W") {
+		ssd.write(commandParser.getCommandInfo().address, commandParser.getCommandInfo().data);
 	}
 	else {
-		cerr << "Unknown command: " << commandParser.getCommand() << endl;
+		cerr << "Unknown command: " << commandParser.getCommandInfo().command << endl;
 		return 1;
 	}
 
