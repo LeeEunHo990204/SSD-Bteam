@@ -30,35 +30,35 @@ TEST(Command, disabled_SpaceCommand) {
 
 TEST_F(ShellFixture, invalid_cmd) {
 	std::string actual = shell->runOneCommand("INVALID");
-	EXPECT_EQ("INVALID COMMAND\n", actual);
+	EXPECT_EQ("INVALID COMMAND", actual);
 }
 
 TEST_F(ShellFixture, invalid_params_write) {
 	std::string actual = shell->runOneCommand("WRITE 1");
-	EXPECT_EQ("INVALID COMMAND\n", actual);
+	EXPECT_EQ("INVALID COMMAND", actual);
 }
 
 TEST_F(ShellFixture, invalid_params_read) {
 	std::string actual = shell->runOneCommand("READ");
-	EXPECT_EQ("INVALID COMMAND\n", actual);
+	EXPECT_EQ("INVALID COMMAND", actual);
 }
 
 TEST_F(ShellFixture, invalid_params_fullwrite) {
 	std::string actual = shell->runOneCommand("FULLWRITE 0x12345678");
-	EXPECT_EQ("[FullWrite] Done\n", actual);
+	EXPECT_EQ("[FullWrite] Done", actual);
 }
 
 TEST_F(ShellFixture, write) {
 	std::string actual = shell->runOneCommand("WRITE 1 0x12345678");
-	EXPECT_EQ("[Write] Done\n", actual);
+	EXPECT_EQ("[Write] Done", actual);
 }
 
 TEST_F(ShellFixture, read) {
 	std::string actual = shell->runOneCommand("READ 1");
-	EXPECT_EQ("[Read] LBA 1 : 0\n", actual);
+	EXPECT_EQ("[Read] LBA 1 : 0", actual);
 }
 
 TEST_F(ShellFixture, testscripts1) {
 	std::string actual = shell->runOneCommand("1_");
-	EXPECT_EQ("0", actual);
+	EXPECT_EQ("PASS", actual);
 }

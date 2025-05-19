@@ -2,6 +2,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <unordered_set>
 #include <unordered_map>
 #include "cmd_launcher.cpp"
 #include "TestScripts.h"
@@ -9,6 +10,15 @@
 class Validation {
 public:
 	Validation() {
+		cmdSet = {
+			"write", "WRITE", 
+			"read", "READ", 
+			"fullwrite", "FULLWRITE", 
+			"fullread", "FULLREAD", 
+			"1_", "1_FullWriteAndReadCompare", 
+			"2_", "2_PartialLBAWrite", 
+			"3_", "3_WriteReadAging"
+		};
 		paramCntMap = {
 			{"write", 2}, {"WRITE", 2},
 			{"read", 1}, {"READ", 1},
@@ -21,17 +31,19 @@ public:
 	}
 
 	bool isValid(const std::string& cmd, const std::vector<std::string>& params) {
+		if (cmdSet.count(cmd) == 0) return false;
 		if (paramCntMap.count(cmd) == 0) return true;
 		int paramCnt = params.size();
 		if (isValidParamCnt(cmd, paramCnt) == false) return false;
-		if(cmd == "write" || cmd == "WRITE" || cmd == "fullwrite" || cmd == "FULLWRITE")
+		if (cmd == "write" || cmd == "WRITE" || cmd == "fullwrite" || cmd == "FULLWRITE")
 			return isValidValue(params[paramCnt - 1]);
 		return true;
 	}
 
 private:
+	std::unordered_set<std::string> cmdSet;
 	std::unordered_map<std::string, int> paramCntMap;
-	
+
 	bool isValidParamCnt(const std::string& cmd, const int& paramCnt) {
 		if (paramCntMap.count(cmd) == 0) return true;
 		return paramCntMap[cmd] == paramCnt;
@@ -87,7 +99,7 @@ public:
 			std::string result = runOneCommand(cmdLine);
 			if (result == "EXIT") break;
 			else if (result == "HELP") continue;
-			std::cout << result;
+			std::cout << result << std::endl;
 		}
 	}
 
@@ -95,19 +107,19 @@ public:
 		std::vector<std::string> words = splitBySpace(cmdLine);
 		Command* command = new Command(words);
 		if (command->getValid() == false) {
-			return "INVALID COMMAND\n";
+			return "INVALID COMMAND";
 		}
 
 		if (command->cmd == "write" || command->cmd == "WRITE") {
 			int LBA = stoi(command->params[0]);
 			unsigned int val = stoul(command->params[1]);
 			cmdLauncher->write(LBA, val);
-			return "[Write] Done\n";
+			return "[Write] Done";
 		}
 
 		else if (command->cmd == "read" || command->cmd == "READ") {
 			int LBA = stoi(command->params[0]);
-			return std::string("[Read] LBA ") + std::to_string(LBA) + std::string(" : ") + std::to_string(cmdLauncher->read(LBA)) + std::string("\n");
+			return std::string("[Read] LBA ") + std::to_string(LBA) + std::string(" : ") + std::to_string(cmdLauncher->read(LBA));
 		}
 
 		else if (command->cmd == "exit" || command->cmd == "EXIT") {
@@ -123,13 +135,14 @@ public:
 			for (int LBA = 0; LBA < 100; LBA++) {
 				cmdLauncher->write(LBA, val);
 			}
-			return "[FullWrite] Done\n";
+			return "[FullWrite] Done";
 		}
 
 		else if (command->cmd == "fullread" || command->cmd == "FULLREAD") {
 			std::string result = "[FullRead]";
 			for (int LBA = 0; LBA < 100; LBA++) {
-				result += std::string("LBA ") + std::to_string(LBA) + std::string(" : ") + std::to_string(cmdLauncher->read(LBA)) + std::string("\n");
+				result += std::string("LBA ") + std::to_string(LBA) + std::string(" : ") + std::to_string(cmdLauncher->read(LBA));
+				if (LBA < 99) result += std::string("\n");
 			}
 			return result;
 		}
@@ -137,22 +150,22 @@ public:
 		else if (command->cmd == "1_" || command->cmd == "1_FullWriteAndReadCompare") {
 			setTestScripts(new TestScripts1);
 			testScripts->runTestScenario();
-			if (testScripts->getResult() == 0) return "PASS\n";
-			return "FAIL\n";
+			if (testScripts->getResult() == 0) return "PASS";
+			return "FAIL";
 		}
 
 		else if (command->cmd == "2_" || command->cmd == "2_PartialLBAWrite") {
 			//setTestScripts(new TestScripts2);
 			testScripts->runTestScenario();
-			if (testScripts->getResult() == 0) return "PASS\n";
-			return "FAIL\n";
+			if (testScripts->getResult() == 0) return "PASS";
+			return "FAIL";
 		}
 
 		else if (command->cmd == "3_" || command->cmd == "3_WriteReadAging") {
 			//setTestScripts(new TestScripts3);
 			testScripts->runTestScenario();
-			if (testScripts->getResult() == 0) return "PASS\n";
-			return "FAIL\n";
+			if (testScripts->getResult() == 0) return "PASS";
+			return "FAIL";
 		}
 	}
 
