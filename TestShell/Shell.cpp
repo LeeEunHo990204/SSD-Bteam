@@ -137,7 +137,7 @@ public:
 		}
 
 		else if (command->cmd == "fullwrite" || command->cmd == "FULLWRITE") {
-			unsigned int val = stoul(command->params[0]);
+			unsigned int val = stoul(command->params[0], nullptr, 16);
 			for (int LBA = 0; LBA < 100; LBA++) {
 				cmdLauncher->write(LBA, val);
 			}
