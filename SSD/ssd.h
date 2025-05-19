@@ -7,9 +7,11 @@
 #include <iomanip>
 #include <cstdint>
 
+#include "device.h"
+
 using namespace std;
 
-class SSD {
+class SSD : public IDevice {
 public:
 	SSD();
 	void write(int idx, int value);
