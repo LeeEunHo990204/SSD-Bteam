@@ -12,12 +12,12 @@ class Validation {
 public:
 	Validation() {
 		cmdSet = {
-			"write", "WRITE", 
-			"read", "READ", 
-			"fullwrite", "FULLWRITE", 
-			"fullread", "FULLREAD", 
-			"1_", "1_FullWriteAndReadCompare", 
-			"2_", "2_PartialLBAWrite", 
+			"write", "WRITE",
+			"read", "READ",
+			"fullwrite", "FULLWRITE",
+			"fullread", "FULLREAD",
+			"1_", "1_FullWriteAndReadCompare",
+			"2_", "2_PartialLBAWrite",
 			"3_", "3_WriteReadAging",
 			"exit", "EXIT",
 			"help", "HELP"
@@ -35,7 +35,7 @@ public:
 
 	bool isValid(const std::string& cmd, const std::vector<std::string>& params) {
 		if (cmdSet.count(cmd) == 0) return false;
-		
+
 		// EXIT, HELP
 		if (paramCntMap.count(cmd) == 0) return true;
 
@@ -129,6 +129,8 @@ public:
 
 		else if (command->cmd == "read" || command->cmd == "READ") {
 			int LBA = stoi(command->params[0]);
+			if (LBA >= 100 || LBA < 0)
+				return std::string("[Read] LBA ") + std::to_string(LBA) + std::string(" : ") + std::string("ERROR");
 			return std::string("[Read] LBA ") + std::to_string(LBA) + std::string(" : ") + std::to_string(cmdLauncher->read(LBA));
 		}
 
