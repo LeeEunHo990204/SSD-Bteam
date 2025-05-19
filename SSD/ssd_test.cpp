@@ -7,45 +7,39 @@ using namespace std;
 
 
 
-TEST(SsdTest, constructor) {
+class SsdTestFixture : public Test {
+public:
 	SSD ssd;
-}
+};
 
-TEST(SsdTest, writeTrue) {
-	SSD ssd;
+TEST_F(SsdTestFixture, writeTrue) {
 	ssd.write(0, 0x123);
 	ssd.write(60, 0x456);
 }
 
-TEST(SsdTest, writeFalse) {
-	SSD ssd;
+TEST_F(SsdTestFixture, writeFalse) {
 	ssd.write(0, 0x123);
 }
 
-TEST(SsdTest, readTrue) {
-	SSD ssd;
+TEST_F(SsdTestFixture, readTrue) {
 	ssd.read(0);
 }
 
-TEST(SsdTest, readFalse) {
-	SSD ssd;
+TEST_F(SsdTestFixture, readFalse) {
 	ssd.read(100);
 }
 
-TEST(SsdTest, readWriteTrue) {
-	SSD ssd;
+TEST_F(SsdTestFixture, readWriteTrue) {
 	ssd.write(0, 0x123);
 	EXPECT_EQ(0x123, ssd.read(0));
 }
 
-TEST(SsdTest, readWriteFalse) {
-	SSD ssd;
+TEST_F(SsdTestFixture, readWriteFalse) {
 	ssd.write(1, 0x123);
 	EXPECT_NE(0x456, ssd.read(1));
 }
 
-TEST(SsdTest, writeDuplicateTrue) {
-	SSD ssd;
+TEST_F(SsdTestFixture, writeDuplicateTrue) {
 	ssd.write(0, 0x12345678);
 	ssd.write(50, 0x5678);
 	ssd.write(0, 0x5678);
