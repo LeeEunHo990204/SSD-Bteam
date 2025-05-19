@@ -83,7 +83,7 @@ public:
 		std::vector<std::string> words = splitBySpace(cmdLine);
 		Command* command = new Command(words);
 		if (command->getValid() == false) {
-			return "INVALID_COMMAND\n";
+			return "INVALID COMMAND\n";
 		}
 
 		if (command->cmd == "write" || command->cmd == "WRITE") {
@@ -119,6 +119,7 @@ public:
 			for (int LBA = 0; LBA < 100; LBA++) {
 				result += std::string("LBA ") + std::to_string(LBA) + std::string(" : ") + std::to_string(cmdLauncher->read(LBA)) + std::string("\n");
 			}
+			return result;
 		}
 	}
 
