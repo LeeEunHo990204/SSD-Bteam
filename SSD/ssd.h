@@ -14,6 +14,7 @@ public:
 	SSD();
 	void write(int idx, int value);
 	unsigned int read(int idx);
+	bool isAddressValid(int idx);
 private:
 	unsigned int storage[100] = { 0, };
 	const string filename = "ssd_nand.txt";

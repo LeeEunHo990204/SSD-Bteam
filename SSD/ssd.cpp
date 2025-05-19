@@ -53,6 +53,10 @@ void SSD::init(void) {
 }
 
 void SSD::write(int idx, int value) {
+	if (!isAddressValid(idx)) {
+		std::cerr << "유효하지 않은 주소입니다!" << std::endl;
+		return;
+	}
 	storage[idx] = value;
 	if (!file.is_open()) {
 		std::cerr << "파일 생성에 실패했습니다!" << std::endl;
@@ -62,18 +66,38 @@ void SSD::write(int idx, int value) {
 	file.seekp((LINE_LENGTH + 1) * idx, std::ios::beg);
 	file << std::string(20, ' ');
 	file.seekp((LINE_LENGTH + 1) * idx, std::ios::beg);
-	file << std::left << std::dec<< idx << " 0x" << std::hex << storage[idx];
+	file << std::left << std::dec << idx << std::uppercase << " 0x" << std::hex << storage[idx];
 	storage[idx] = value;
 }
 
-unsigned SSD::read(int idx) {
+unsigned int SSD::read(int idx) {
+	if (!isAddressValid(idx)) {
+		std::cerr << "유효하지 않은 주소입니다!" << std::endl;
+		return 0;
+	}
 	ofstream outfile("ssd_output.txt", std::ios::in | std::ios::trunc);
 	if (!outfile.is_open()) {
 		std::cerr << "파일 생성에 실패했습니다!" << std::endl;
 		return 0;
 	}
 
-	outfile << "0x" << hex << storage[idx] << endl;
+	outfile << "0x" << std::uppercase << hex << storage[idx] << endl;
 	outfile.close();
 	return storage[idx];
+}
+
+bool SSD::isAddressValid(int idx) {
+	if (idx >= 0 && idx < 100)
+	{
+		return true;
+	}
+	ofstream outfile("ssd_output.txt", std::ios::in | std::ios::trunc);
+	if (!outfile.is_open()) {
+		std::cerr << "파일 생성에 실패했습니다!" << std::endl;
+		return false;
+	}
+	outfile << "ERROR" << endl;
+	outfile.close();
+
+	return false;
 }
