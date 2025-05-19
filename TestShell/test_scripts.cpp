@@ -1,13 +1,18 @@
 #include "gmock/gmock.h"
 #include "TestScripts.h"
 
-class TescScriptsFixture : public ::testing::Test
+class TestScriptsFixture : public ::testing::Test
 {
 public:
 	ITestScripts* testScripts;
 	void factoryCreateTS(std::string tsName)
 	{
 		testScripts = new TestScripts1(tsName);
+	}
+
+	void factoryCreateTSWithLauncher(std::string tsName, ICmdLauncher* launcher)
+	{
+		testScripts = new TestScripts1(tsName, launcher);
 	}
 	
 	void deleteTS() {
@@ -19,9 +24,11 @@ public:
 	std::string TS1_NAME = "1_FullWriteAndReadCompare";
 	std::string TS2_NAME = "2_PartialLBAWrite";
 	std::string TS3_NAME = "3_PartialLBARead";
+
+	SSDCmdLauncher ssdCmdLauncher;
 };
 
-TEST_F(TescScriptsFixture, TestCreateTS1instance)
+TEST_F(TestScriptsFixture, TestCreateTS1instance)
 {
 	//Arrange
 	factoryCreateTS(TS1_NAME);
@@ -32,7 +39,7 @@ TEST_F(TescScriptsFixture, TestCreateTS1instance)
 	deleteTS();
 }
 
-TEST_F(TescScriptsFixture, TestCreateTS2instance)
+TEST_F(TestScriptsFixture, TestCreateTS2instance)
 {
 	//Arrange
 	factoryCreateTS(TS2_NAME);
@@ -43,7 +50,7 @@ TEST_F(TescScriptsFixture, TestCreateTS2instance)
 	deleteTS();
 }
 
-TEST_F(TescScriptsFixture, TestCreateTS3instance)
+TEST_F(TestScriptsFixture, TestCreateTS3instance)
 {
 	//Arrange
 	factoryCreateTS(TS3_NAME);
@@ -53,4 +60,39 @@ TEST_F(TescScriptsFixture, TestCreateTS3instance)
 
 	deleteTS();
 }
+
+TEST_F(TestScriptsFixture, TestCreateTS1WithLauncher)
+{
+	//Arrange
+	factoryCreateTSWithLauncher(TS1_NAME, &ssdCmdLauncher);
+
+	//ACT, Assert
+	EXPECT_EQ(testScripts->getName(), TS1_NAME);
+
+	deleteTS();
+}
+
+TEST_F(TestScriptsFixture, TestCreateTS2WithLauncher)
+{
+	//Arrange
+	factoryCreateTSWithLauncher(TS2_NAME, &ssdCmdLauncher);
+
+	//ACT, Assert
+	EXPECT_EQ(testScripts->getName(), TS2_NAME);
+
+	deleteTS();
+}
+
+TEST_F(TestScriptsFixture, TestCreateTS3WithLauncher)
+{
+	//Arrange
+	factoryCreateTSWithLauncher(TS3_NAME, &ssdCmdLauncher);
+
+	//ACT, Assert
+	EXPECT_EQ(testScripts->getName(), TS3_NAME);
+
+	deleteTS();
+}
+
+
 
