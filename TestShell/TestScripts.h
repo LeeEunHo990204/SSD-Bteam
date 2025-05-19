@@ -18,12 +18,12 @@ public:
 	
 	virtual int getResult() = 0;
 	virtual std::string getName() = 0;
+	ShellDeviceDriver* getShellDev() { return cmdLauncer; }
 	
 protected:
 	std::string scriptName;
 	int testResult;			// 0: pass, 1: fail
 
-	SSDCmdLauncher ssdCmdLauncer;
 	ShellDeviceDriver* cmdLauncer;
 };
 

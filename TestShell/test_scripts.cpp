@@ -31,9 +31,10 @@ public:
 	std::string TS1_NAME = "1_FullWriteAndReadCompare";
 	std::string TS2_NAME = "2_PartialLBAWrite";
 	std::string TS3_NAME = "3_PartialLBARead";
+	std::string BASIC_NAME = "BasicTest";
 
 	SSDCmdLauncher ssdCmdLauncher;
-	MockLauncher mockCmdLauncher;
+	MockLauncher mockLauncher;
 };
 
 TEST_F(TestScriptsFixture, TestCreateTS1instance)
@@ -101,3 +102,42 @@ TEST_F(TestScriptsFixture, TestCreateTS3WithLauncher)
 
 	deleteTS();
 }
+
+TEST_F(TestScriptsFixture, TestCreateMockLauncher)
+{
+	//Arrange
+	factoryCreateTSWithLauncher(TS1_NAME, &mockLauncher);
+	//ACT, Assert
+	EXPECT_EQ(testScripts->getName(), TS1_NAME);
+	deleteTS();
+}
+
+TEST_F(TestScriptsFixture, TestMockBasicReadTest)
+{
+	//Arrange
+	factoryCreateTSWithLauncher(BASIC_NAME, &mockLauncher);
+	EXPECT_CALL(mockLauncher, read(::testing::_))
+		.Times(1)
+		.WillOnce(testing::Return(0x00000000));
+	
+	//Act
+	int readVal = testScripts->getShellDev()->read(0x00);
+
+	//Assert
+	EXPECT_EQ(readVal, 0x00000000);
+	deleteTS();
+}
+
+TEST_F(TestScriptsFixture, TestMockBasicWriteTest)
+{
+	//Arrange
+	factoryCreateTSWithLauncher(BASIC_NAME, &mockLauncher);
+	EXPECT_CALL(mockLauncher, write(::testing::_, ::testing::_))
+		.Times(1);
+
+	//Act, Asser
+	testScripts->getShellDev()->write(0x00, 0x00000000);
+
+	deleteTS();
+}
+
