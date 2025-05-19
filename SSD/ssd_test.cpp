@@ -67,8 +67,8 @@ TEST(SsdTest, ValidReadCommandParsing)
 	CommandParser parser(argv.size(), argv.data());
 
 	EXPECT_TRUE(parser.isValid());
-	EXPECT_EQ(parser.getCommand(), "R");
-	EXPECT_EQ(parser.getLBA(), 1);
+	EXPECT_EQ(parser.getCommandInfo().command, "R");
+	EXPECT_EQ(parser.getCommandInfo().address, 1);
 
 }
 TEST(SsdTest, InvalidLBAReadCommandParsing)
@@ -79,8 +79,8 @@ TEST(SsdTest, InvalidLBAReadCommandParsing)
 	CommandParser parser(argv.size(), argv.data());
 
 	EXPECT_TRUE(parser.isValid());
-	EXPECT_EQ(parser.getCommand(), "R");
-	EXPECT_EQ(parser.getLBA(), 1000);
+	EXPECT_EQ(parser.getCommandInfo().command, "R");
+	EXPECT_EQ(parser.getCommandInfo().address, 1000);
 
 }
 TEST(SsdTest, ValidWriteCommandParsing)
@@ -91,9 +91,9 @@ TEST(SsdTest, ValidWriteCommandParsing)
 	CommandParser parser(argv.size(), argv.data());
 
 	EXPECT_TRUE(parser.isValid());
-	EXPECT_EQ(parser.getCommand(), "W");
-	EXPECT_EQ(parser.getLBA(), 1);
-	EXPECT_EQ(parser.getData(), 0xFFFFFFFF);
+	EXPECT_EQ(parser.getCommandInfo().command, "W");
+	EXPECT_EQ(parser.getCommandInfo().address, 1);
+	EXPECT_EQ(parser.getCommandInfo().data, 0xFFFFFFFF);
 
 }
 
