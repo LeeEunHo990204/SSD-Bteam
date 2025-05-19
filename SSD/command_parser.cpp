@@ -1,4 +1,4 @@
-#include "command_parser.h"
+ï»¿#include "command_parser.h"
 
 
 CommandParser::CommandParser(int argc, char* argv[]) {
@@ -17,7 +17,7 @@ bool CommandParser::parse(int argc, char* argv[]) {
 
     if (argc == 4)
     {
-        // [spec] lba range ¿¡·¯ ¿Ü¿¡´Â file¿¡ error ÀûÁö ¾ÊÀ½.
+        // [spec] lba range ì—ëŸ¬ ì™¸ì—ëŠ” fileì— error ì ì§€ ì•ŠìŒ.
         if (isOutOf4ByteRange(argv[3])) {
             std::cout << "Out of 4-byte range!" << std::endl;
             return false;
