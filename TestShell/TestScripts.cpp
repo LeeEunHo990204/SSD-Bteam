@@ -14,5 +14,9 @@ void TestScripts1::runTestScenario() {
 }
 
 int TestScripts1::getResult() {
-	return 0;
+	return testResult;
+}
+
+std::string TestScripts1::getName() {
+	return scriptName;
 }
