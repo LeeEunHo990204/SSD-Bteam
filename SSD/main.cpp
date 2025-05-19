@@ -1,64 +1,74 @@
 #include "gmock/gmock.h"
 #include "ssd.h"
+#include "command_parser.h"
 
 using namespace testing;
 using namespace std;
 
-bool isOutOf4ByteRange(const std::string& hexStr) {
-    try {
-        unsigned long long value = std::stoull(hexStr, nullptr, 16);
-        return value > 0xFFFFFFFFULL;
-    }
-    catch (const std::exception&) {
-        return true;
-    }
+//#define TEST_SHELL
+
+int test_shell(void) {
+	string device, cmd;
+	int address;
+	string hexData = "";
+
+	while (cin >> device && device != "exit") {
+		cin >> cmd >> address;
+
+		if (cmd == "W")
+			cin >> hexData;
+
+		if (cin.fail()) {
+			cerr << "입력 형식 오류!" << endl;
+			cin.clear();
+			cin.ignore(10000, '\n');
+			continue;
+		}
+
+		SSD ssd;
+
+		if (cmd == "R") {
+			ssd.read(address);
+		}
+		else if (cmd == "W") {
+			unsigned int data = 0;
+			if (hexData.rfind("0x", 0) == 0) {
+				data = std::stoul(hexData, nullptr, 16);
+			}
+			ssd.write(address, data);
+		}
+		else {
+			cerr << "Unknown command: " << cmd << endl;
+			return 1;
+		}
+	}
+
+	return 0;
 }
 
 int main(int argc, char* argv[]) {
 #if defined(_DEBUG)
 	InitGoogleMock();
 	return RUN_ALL_TESTS();
+#elif defined(TEST_SHELL)
+	return test_shell();
 #else
-    if (argc < 3) {
-        cout << "Usage:" << endl;
-        cout << "  ssd.exe R [address]" << endl;
-        cout << "  ssd.exe W [address] [data(hex)]" << endl;
-        return 1;
-    }
 
-    string cmd = argv[1];
-    int address = stoi(argv[2]);
+	CommandParser commandParser(argc, argv);
+	SSD ssd;
 
-    if (address < 0 || address > 99)
-    {
-        cerr << "LBA Out of Range" << endl;
-        return 1;
-    }
-    SSD ssd;
-    
-    cout << "CMD :" << cmd << endl;
-    cout << "argc :" << argc << endl;
-    if (cmd == "R") {
-        ssd.read(address);
-    }
-    else if (cmd == "W") {
-        if (argc < 4) {
-            cerr << "ERROR" << endl;
-            return 1;
-        }
-        if (isOutOf4ByteRange(argv[3])) {
-            std::cout << "Out of 4-byte range!" << std::endl;
-            return 1;
-        }
-
-        unsigned int data = std::stoul(argv[3], nullptr, 16);
-        ssd.write(address, data);
-        
-    }
-    else {
-        cerr << "Unknown command: " << cmd << endl;
-        return 1;
-    }
+	cout << "[logging] CMD :" << commandParser.getCommand() << endl;
+	cout << "[logging] argc :" << argc << endl;
+	if (commandParser.getCommand() == "R") {
+		ssd.read(commandParser.getLBA());
+	}
+	else if (commandParser.getCommand() == "W") {
+		ssd.write(commandParser.getLBA(), commandParser.getData());
+	}
+	else {
+		cerr << "Unknown command: " << commandParser.getCommand() << endl;
+		return 1;
+	}
 
 	return 0;
 #endif

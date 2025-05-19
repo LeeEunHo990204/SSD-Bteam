@@ -5,24 +5,24 @@ SSD::SSD(void) {
 }
 
 void SSD::init(void) {
-	file.open(filename);
+	file.open(filename, std::ios::in | std::ios::out);
 
 	if (!file.is_open()) {
 		ofstream outfile(filename);
 		if (!outfile.is_open()) {
-			std::cerr << "ÆÄÀÏ »ý¼º¿¡ ½ÇÆÐÇß½À´Ï´Ù!" << std::endl;
+			std::cerr << "íŒŒì¼ ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤!" << std::endl;
 			return;
 		}
 
 		for (int i = 0; i < 100; i++) {
-			outfile << i << " " << endl;
+			outfile << setw(LINE_LENGTH - 1) << std::left << i << "\n";
 		}
 
 		outfile.close();
 
 		file.open(filename);
 		if (!file.is_open()) {
-			cerr << "»ý¼º ÈÄ ÆÄÀÏ ¿­±â¿¡ ½ÇÆÐÇß½À´Ï´Ù!" << endl;
+			cerr << "ìƒì„± í›„ íŒŒì¼ ì—´ê¸°ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤!" << endl;
 			return;
 		}
 	}
@@ -34,15 +34,15 @@ void SSD::init(void) {
 		std::istringstream iss(line);
 		std::string index_part, hex_part;
 
-		iss >> index_part >> hex_part; // [3] ¿Í 0x12345678 ºÐ¸®
+		iss >> index_part >> hex_part; // [3] ì™€ 0x12345678 ë¶„ë¦¬
 
-		if (!hex_part.empty() && hex_part.rfind("0x", 0) == 0) {  // "0x"·Î ½ÃÀÛÇÏ¸é
+		if (!hex_part.empty() && hex_part.rfind("0x", 0) == 0) {  // "0x"ë¡œ ì‹œìž‘í•˜ë©´
 			try {
 				unsigned int value = std::stoul(hex_part, nullptr, 16);
 				storage[i] = value;
 			}
 			catch (const std::exception& e) {
-				std::cerr << "º¯È¯ ¿À·ù: '" << hex_part << "' ¡æ 0À¸·Î ´ëÃ¼µÊ" << std::endl;
+				std::cerr << "ë³€í™˜ ì˜¤ë¥˜: '" << hex_part << "' â†’ 0ìœ¼ë¡œ ëŒ€ì²´ë¨" << std::endl;
 				storage[i] = 0;
 			}
 		}
@@ -53,9 +53,52 @@ void SSD::init(void) {
 }
 
 void SSD::write(int idx, int value) {
+	if (!isAddressValid(idx)) {
+		std::cerr << "ìœ íš¨í•˜ì§€ ì•Šì€ ì£¼ì†Œìž…ë‹ˆë‹¤!" << std::endl;
+		return;
+	}
+	storage[idx] = value;
+	if (!file.is_open()) {
+		std::cerr << "íŒŒì¼ ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤!" << std::endl;
+		return;
+	}
+
+	file.seekp((LINE_LENGTH + 1) * idx, std::ios::beg);
+	file << std::string(LINE_LENGTH - 1, ' ');
+	file.seekp((LINE_LENGTH + 1) * idx, std::ios::beg);
+	file << std::dec << idx << std::uppercase << " 0x" << std::hex << std::setw(8) << std::setfill('0') << storage[idx];
 	storage[idx] = value;
 }
 
-unsigned SSD::read(int idx) {
+unsigned int SSD::read(int idx) {
+	if (!isAddressValid(idx)) {
+		std::cerr << "ìœ íš¨í•˜ì§€ ì•Šì€ ì£¼ì†Œìž…ë‹ˆë‹¤!" << std::endl;
+		return 0;
+	}
+	ofstream outfile("ssd_output.txt");
+	if (!outfile.is_open()) {
+		std::cerr << "íŒŒì¼ ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤!" << std::endl;
+		return 0;
+	}
+
+	outfile << "0x" << std::uppercase << hex << std::setw(8) << std::setfill('0') << storage[idx] << endl;
+	cout << "0x" << std::uppercase << hex << std::setw(8) << std::setfill('0') << storage[idx] << endl;
+	outfile.close();
 	return storage[idx];
+}
+
+bool SSD::isAddressValid(int idx) {
+	if (idx >= 0 && idx < 100)
+	{
+		return true;
+	}
+	ofstream outfile("ssd_output.txt");
+	if (!outfile.is_open()) {
+		std::cerr << "íŒŒì¼ ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤!" << std::endl;
+		return false;
+	}
+	outfile << "ERROR" << endl;
+	outfile.close();
+
+	return false;
 }

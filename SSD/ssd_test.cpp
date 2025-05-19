@@ -1,35 +1,108 @@
 #include "gmock/gmock.h"
 #include "ssd.h"
+#include "command_parser.h"
+#include "mock.h"
 
 using namespace testing;
 using namespace std;
 
-TEST(SsdTest, constructor) {
+
+
+class SsdTestFixture : public Test {
+public:
 	SSD ssd;
+};
+
+TEST(MockTest, write) {
+	MockDevice device;
+	EXPECT_CALL(device, write(0, 0));
+	device.write(0, 0);
 }
 
-TEST(SsdTest, write1) {
-	SSD ssd;
+TEST(MockTest, read) {
+	MockDevice device;
+	EXPECT_CALL(device, read(0));
+	device.read(0);
+}
+
+TEST_F(SsdTestFixture, writeTrue) {
+	ssd.write(0, 0x123);
+	ssd.write(60, 0x456);
+}
+
+TEST_F(SsdTestFixture, writeFalse) {
 	ssd.write(0, 0x123);
 }
 
-TEST(SsdTest, read1) {
-	SSD ssd;
+TEST_F(SsdTestFixture, readTrue) {
 	ssd.read(0);
 }
 
-TEST(SsdTest, read2) {
-	SSD ssd;
+TEST_F(SsdTestFixture, readFalse) {
+	ssd.read(100);
+}
+
+TEST_F(SsdTestFixture, readWriteTrue) {
 	ssd.write(0, 0x123);
 	EXPECT_EQ(0x123, ssd.read(0));
 }
 
-TEST(SsdTest, read3) {
-	SSD ssd;
-	EXPECT_EQ(0x123, ssd.read(1));
+TEST_F(SsdTestFixture, readWriteFalse) {
+	ssd.write(1, 0x123);
+	EXPECT_NE(0x456, ssd.read(1));
 }
 
-TEST(SsdTest, read4) {
-	SSD ssd;
-	EXPECT_EQ(0x12345678, ssd.read(2));
+TEST_F(SsdTestFixture, writeDuplicateTrue) {
+	ssd.write(0, 0x12345678);
+	ssd.write(50, 0x5678);
+	ssd.write(0, 0x5678);
+	EXPECT_EQ(0x5678, ssd.read(0));
+}
+
+TEST(SsdTest, ValidReadCommandParsing)
+{
+	std::vector<std::string> args = { "SSD.exe", "R", "1"};
+	std::vector<char*> argv;
+	for (auto& s : args) argv.push_back(const_cast<char*>(s.c_str()));
+	CommandParser parser(argv.size(), argv.data());
+
+	EXPECT_TRUE(parser.isValid());
+	EXPECT_EQ(parser.getCommand(), "R");
+	EXPECT_EQ(parser.getLBA(), 1);
+
+}
+TEST(SsdTest, InvalidLBAReadCommandParsing)
+{
+	std::vector<std::string> args = { "SSD.exe", "R", "1000" };
+	std::vector<char*> argv;
+	for (auto& s : args) argv.push_back(const_cast<char*>(s.c_str()));
+	CommandParser parser(argv.size(), argv.data());
+
+	EXPECT_TRUE(parser.isValid());
+	EXPECT_EQ(parser.getCommand(), "R");
+	EXPECT_EQ(parser.getLBA(), 1000);
+
+}
+TEST(SsdTest, ValidWriteCommandParsing)
+{
+	std::vector<std::string> args = { "SSD.exe", "W", "1", "0xFFFFFFFF"};
+	std::vector<char*> argv;
+	for (auto& s : args) argv.push_back(const_cast<char*>(s.c_str()));
+	CommandParser parser(argv.size(), argv.data());
+
+	EXPECT_TRUE(parser.isValid());
+	EXPECT_EQ(parser.getCommand(), "W");
+	EXPECT_EQ(parser.getLBA(), 1);
+	EXPECT_EQ(parser.getData(), 0xFFFFFFFF);
+
+}
+
+TEST(SsdTest, InvalidWriteCommandParsing)
+{
+	std::vector<std::string> args = { "SSD.exe", "W", "1", "0xFFFFFFFF123" };
+	std::vector<char*> argv;
+	for (auto& s : args) argv.push_back(const_cast<char*>(s.c_str()));
+	CommandParser parser(argv.size(), argv.data());
+
+	EXPECT_FALSE(parser.isValid());
 }

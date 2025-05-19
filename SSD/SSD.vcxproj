@@ -127,15 +127,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="command_parser.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ssd.cpp" />
     <ClCompile Include="ssd_test.cpp" />
+    <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="command_parser.h" />
+    <ClInclude Include="device.h" />
+    <ClInclude Include="mock.h" />
     <ClInclude Include="ssd.h" />
+    <ClInclude Include="util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
