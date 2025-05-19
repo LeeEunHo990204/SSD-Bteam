@@ -64,11 +64,12 @@ TEST(SsdTest, ValidReadCommandParsing)
 	std::vector<std::string> args = { "SSD.exe", "R", "1"};
 	std::vector<char*> argv;
 	for (auto& s : args) argv.push_back(const_cast<char*>(s.c_str()));
-	CommandParser parser(argv.size(), argv.data());
+	CommandParser parser(argv.size(), argv.data());	
+	CommandInfo commandInfo = parser.getCommandInfo();
 
 	EXPECT_TRUE(parser.isValid());
-	EXPECT_EQ(parser.getCommandInfo().command, "R");
-	EXPECT_EQ(parser.getCommandInfo().address, 1);
+	EXPECT_EQ(commandInfo.command, "R");
+	EXPECT_EQ(commandInfo.address, 1);
 
 }
 TEST(SsdTest, InvalidLBAReadCommandParsing)
@@ -77,10 +78,11 @@ TEST(SsdTest, InvalidLBAReadCommandParsing)
 	std::vector<char*> argv;
 	for (auto& s : args) argv.push_back(const_cast<char*>(s.c_str()));
 	CommandParser parser(argv.size(), argv.data());
+	CommandInfo commandInfo = parser.getCommandInfo();
 
 	EXPECT_TRUE(parser.isValid());
-	EXPECT_EQ(parser.getCommandInfo().command, "R");
-	EXPECT_EQ(parser.getCommandInfo().address, 1000);
+	EXPECT_EQ(commandInfo.command, "R");
+	EXPECT_EQ(commandInfo.address, 1000);
 
 }
 TEST(SsdTest, ValidWriteCommandParsing)
@@ -89,11 +91,12 @@ TEST(SsdTest, ValidWriteCommandParsing)
 	std::vector<char*> argv;
 	for (auto& s : args) argv.push_back(const_cast<char*>(s.c_str()));
 	CommandParser parser(argv.size(), argv.data());
+	CommandInfo commandInfo = parser.getCommandInfo();
 
 	EXPECT_TRUE(parser.isValid());
-	EXPECT_EQ(parser.getCommandInfo().command, "W");
-	EXPECT_EQ(parser.getCommandInfo().address, 1);
-	EXPECT_EQ(parser.getCommandInfo().data, 0xFFFFFFFF);
+	EXPECT_EQ(commandInfo.command, "W");
+	EXPECT_EQ(commandInfo.address, 1);
+	EXPECT_EQ(commandInfo.data, 0xFFFFFFFF);
 
 }
 
