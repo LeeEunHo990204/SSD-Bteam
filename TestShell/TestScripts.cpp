@@ -21,5 +21,9 @@ void TestScripts2::runTestScenario() {
 void TestScripts3::runTestScenario() {
 	int loopCnt = 0;
 
-	readCompare(0, 0x000);
+	//TODO: Need to meet requirements
+	for (loopCnt = 0; loopCnt < 200; loopCnt++) {
+		readCompare(0, 0x10101010);
+		readCompare(99, 0x5a5aa5a5);
+	}
 }

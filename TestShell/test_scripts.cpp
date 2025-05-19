@@ -235,3 +235,29 @@ TEST_F(TestScriptsFixture, TestScript2)
 	EXPECT_EQ(testResult, TEST_PASS);
 }
 
+TEST_F(TestScriptsFixture, TestScript3)
+{
+	int pattern[] = { 0x10101010, 0x5a5aa5a5 };
+	int call_count = 0;
+
+	//Arrange
+	factoryCreateTSWithLauncher(TS3_NAME, &mockLauncher);
+
+	EXPECT_CALL(mockLauncher, write(::testing::_, ::testing::_))
+		.Times(400);
+	EXPECT_CALL(mockLauncher, read(::testing::_))
+		.Times(400)
+		.WillRepeatedly(testing::Invoke([&call_count, &pattern](int) {
+		int ret = pattern[call_count % 2];
+		++call_count;
+		return ret;
+			}));
+
+	//Act
+	testScripts->runTestScenario();
+	int testResult = testScripts->getResult();
+
+	//Assert
+	EXPECT_EQ(testResult, TEST_PASS);
+}
+
