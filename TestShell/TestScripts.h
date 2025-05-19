@@ -15,12 +15,21 @@ public:
 		cmdLauncer = new ShellDeviceDriver(cmdLauncher);
 	}
 
-	virtual int readCompare(int lba, int data) = 0;
+	int readCompare(int lba, int data) {
+		getShellDev()->write(lba, data);
+
+		if (data != getShellDev()->read(lba)) {
+			return READ_COMPARE_DATA_MISMATCH; //ERROR: data mismatch
+		}
+		else {
+			return READ_COMPARE_DATA_MATCH; //OK: data match
+		}
+	}
 	virtual void setTestScenario() = 0;
 	virtual void runTestScenario() = 0;
 	
-	virtual int getResult() = 0;
-	virtual std::string getName() = 0;
+	int getResult() { return testResult; }
+	std::string getName() { return scriptName; }
 	ShellDeviceDriver* getShellDev() { return cmdLauncer; }
 	
 protected:
@@ -37,9 +46,6 @@ public:
 	TestScripts1(std::string name) : ITestScripts(name) {}
 	TestScripts1(std::string name, ICmdLauncher* cmdLauncher) : ITestScripts(name, cmdLauncher) {}
 	
-	int readCompare (int lba, int data) override;
 	void setTestScenario() override;
 	void runTestScenario() override;
-	int getResult() override;
-	std::string getName() override;
 };
