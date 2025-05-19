@@ -119,10 +119,8 @@ TEST_F(TestScriptsFixture, TestMockBasicReadTest)
 	EXPECT_CALL(mockLauncher, read(::testing::_))
 		.Times(1)
 		.WillOnce(testing::Return(0x00000000));
-	
 	//Act
-	int readVal = testScripts->getShellDev()->read(0x00);
-
+	unsigned int readVal = testScripts->getShellDev()->read(0x00);
 	//Assert
 	EXPECT_EQ(readVal, 0x00000000);
 	deleteTS();
@@ -134,10 +132,23 @@ TEST_F(TestScriptsFixture, TestMockBasicWriteTest)
 	factoryCreateTSWithLauncher(BASIC_NAME, &mockLauncher);
 	EXPECT_CALL(mockLauncher, write(::testing::_, ::testing::_))
 		.Times(1);
-
 	//Act, Asser
 	testScripts->getShellDev()->write(0x00, 0x00000000);
-
 	deleteTS();
+}
+
+TEST_F(TestScriptsFixture, TestReadCompare)
+{
+	//Arrange
+	factoryCreateTSWithLauncher(BASIC_NAME, &mockLauncher);
+	EXPECT_CALL(mockLauncher, write(0x10, 0x11223344))
+		.Times(1);
+	EXPECT_CALL(mockLauncher, read(::testing::_))
+		.Times(1)
+		.WillOnce(testing::Return(0x11223344));
+	
+	int readCompareResult = testScripts->readCompare(0x10, 0x11223344);
+
+	EXPECT_EQ(readCompareResult, 0);
 }
 
