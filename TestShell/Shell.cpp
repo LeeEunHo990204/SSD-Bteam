@@ -2,6 +2,8 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include "cmd_launcher.cpp"
+#include "TestScripts.h"
 
 class Command {
 public:
@@ -15,6 +17,33 @@ public:
 		}
 		cmd = words[0];
 		params.assign(words.begin() + 1, words.end());
+
+		if (cmd == "write" || cmd == "WRITE") {
+			if (params.size() == 2 && isValidValue(params[1])) {
+				isValid = true;
+			}
+		}
+		else if (cmd == "read" || cmd == "READ") {
+			if (params.size() == 1) {
+				isValid = true;
+			}
+		}
+		else if (cmd == "exit" || cmd == "EXIT") {
+			return;
+		}
+		else if (cmd == "help" || cmd == "HELP") {
+			return;
+		}
+		else if (cmd == "fullwrite" || cmd == "FULLWRITE") {
+			if (params.size() == 1 && isValidValue(params[0])) {
+				isValid = true;
+			}
+		}
+		else if (cmd == "fullread" || cmd == "FULLREAD") {
+			if (params.size() == 0) {
+				isValid = true;
+			}
+		}
 	}
 
 	bool getValid() {
@@ -23,44 +52,80 @@ public:
 
 private:
 	bool isValid;
+	bool isValidValue(const std::string& val) {
+		return (val.length() == 10) && startsWith(val, "0x");
+	}
+	bool startsWith(const std::string& str, const std::string& prefix) {
+		return str.size() >= prefix.size() &&
+			str.compare(0, prefix.size(), prefix) == 0;
+	}
 };
 
 class Shell {
 public:
+	Shell(ICmdLauncher* cmdLauncher, ITestScripts* testScripts) : 
+		cmdLauncher(cmdLauncher), testScripts(testScripts) {}
+
 	void run() {
 		std::string cmdLine;
 		while (true) {
 			std::cout << "shell> ";
 			std::getline(std::cin, cmdLine);
 
-			std::vector<std::string> words = splitBySpace(cmdLine);
-			Command* command = new Command(words);
-			if (command->getValid() == false) {
-				std::cout << "INVALID COMMAND" << std::endl;
-				continue;
-			}
+			std::string result = runOneCommand(cmdLine);
+			if (result == "EXIT") break;
+			else if (result == "HELP") continue;
+			std::cout << result;
+		}
+	}
 
-			if (command->cmd == "write" || command->cmd == "WRITE") {
-				std::cout << "Write Test." << std::endl;
-				//TODO
-				//system("./SSD write [LBA] [DATA]");
-			}
+	std::string runOneCommand(std::string cmdLine) {
+		std::vector<std::string> words = splitBySpace(cmdLine);
+		Command* command = new Command(words);
+		if (command->getValid() == false) {
+			return "INVALID_COMMAND\n";
+		}
 
-			else if (command->cmd == "read" || command->cmd == "READ") {
-				std::cout << "Read Test." << std::endl;
-				//TODO
-				//system("./SSD read [LBA]");
-			}
+		if (command->cmd == "write" || command->cmd == "WRITE") {
+			int LBA = stoi(command->params[0]);
+			unsigned int val = stoul(command->params[1]);
+			cmdLauncher->write(LBA, val);
+			return "[Write] Done\n";
+		}
 
-			else if (command->cmd == "exit") {
-				std::cout << "exit!!" << std::endl;
-				break;
-			}
+		else if (command->cmd == "read" || command->cmd == "READ") {
+			int LBA = stoi(command->params[0]);
+			return std::string("[Read] LBA ") + std::to_string(LBA) + std::string(" : ") + std::to_string(cmdLauncher->read(LBA)) + std::string("\n");
+		}
 
+		else if (command->cmd == "exit" || command->cmd == "EXIT") {
+			return "EXIT";
+		}
+
+		else if (command->cmd == "help" || command->cmd == "HELP") {
+			return "HELP";
+		}
+
+		else if (command->cmd == "fullwrite" || command->cmd == "FULLWRITE") {
+			unsigned int val = stoul(command->params[0]);
+			for (int LBA = 0; LBA < 100; LBA++) {
+				cmdLauncher->write(LBA, val);
+			}
+			return "[FullWrite] Done\n";
+		}
+
+		else if (command->cmd == "fullread" || command->cmd == "FULLREAD") {
+			std::string result = "[FullRead]";
+			for (int LBA = 0; LBA < 100; LBA++) {
+				result += std::string("LBA ") + std::to_string(LBA) + std::string(" : ") + std::to_string(cmdLauncher->read(LBA)) + std::string("\n");
+			}
 		}
 	}
 
 private:
+	ICmdLauncher* cmdLauncher;
+	ITestScripts* testScripts;
+
 	std::vector<std::string> splitBySpace(const std::string& input) {
 		std::istringstream iss(input);
 		std::vector<std::string> result;
