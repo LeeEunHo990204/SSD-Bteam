@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -18,6 +19,8 @@ public:
 			"1_", "1_FullWriteAndReadCompare", 
 			"2_", "2_PartialLBAWrite", 
 			"3_", "3_WriteReadAging"
+			"exit", "EXIT",
+			"help", "HELP"
 		};
 		paramCntMap = {
 			{"write", 2}, {"WRITE", 2},
@@ -115,7 +118,7 @@ public:
 
 		if (command->cmd == "write" || command->cmd == "WRITE") {
 			int LBA = stoi(command->params[0]);
-			unsigned int val = stoul(command->params[1]);
+			unsigned int val = stoul(command->params[1], nullptr, 16);
 			cmdLauncher->write(LBA, val);
 			return "[Write] Done";
 		}
