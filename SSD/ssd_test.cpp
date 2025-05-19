@@ -1,6 +1,7 @@
 #include "gmock/gmock.h"
 #include "ssd.h"
 #include "command_parser.h"
+#include "mock.h"
 
 using namespace testing;
 using namespace std;
@@ -11,6 +12,18 @@ class SsdTestFixture : public Test {
 public:
 	SSD ssd;
 };
+
+TEST(MockTest, write) {
+	MockDevice device;
+	EXPECT_CALL(device, write(0, 0));
+	device.write(0, 0);
+}
+
+TEST(MockTest, read) {
+	MockDevice device;
+	EXPECT_CALL(device, read(0));
+	device.read(0);
+}
 
 TEST_F(SsdTestFixture, writeTrue) {
 	ssd.write(0, 0x123);
