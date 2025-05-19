@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <random>
+#include <cstdint>
 #include "cmd_launcher.cpp"
 
 #define READ_COMPARE_DATA_MISMATCH (-1)
@@ -43,7 +45,7 @@ public:
 	}
 	
 	virtual void runTestScenario() = 0;
-	
+
 	int getResult() { return testResult; }
 	std::string getName() { return scriptName; }
 	ShellDeviceDriver* getShellDev() { return cmdLauncer; }
