@@ -33,6 +33,9 @@ public:
 	std::string TS3_NAME = "3_PartialLBARead";
 	std::string BASIC_NAME = "BasicTest";
 
+	int RAND_NUM = 0x00110011;
+	int RAND_LBA = 0x10;
+
 	SSDCmdLauncher ssdCmdLauncher;
 	MockLauncher mockLauncher;
 };
@@ -137,18 +140,20 @@ TEST_F(TestScriptsFixture, TestMockBasicWriteTest)
 	deleteTS();
 }
 
-TEST_F(TestScriptsFixture, TestReadCompare)
+TEST_F(TestScriptsFixture, TestReadCompareDataMatch)
 {
 	//Arrange
 	factoryCreateTSWithLauncher(BASIC_NAME, &mockLauncher);
-	EXPECT_CALL(mockLauncher, write(0x10, 0x11223344))
+	EXPECT_CALL(mockLauncher, write(RAND_LBA, RAND_NUM))
 		.Times(1);
-	EXPECT_CALL(mockLauncher, read(::testing::_))
+	EXPECT_CALL(mockLauncher, read(RAND_LBA))
 		.Times(1)
-		.WillOnce(testing::Return(0x11223344));
+		.WillOnce(testing::Return(RAND_NUM));
 	
-	int readCompareResult = testScripts->readCompare(0x10, 0x11223344);
+	//Act
+	int readCompareResult = testScripts->readCompare(RAND_LBA, RAND_NUM);
 
-	EXPECT_EQ(readCompareResult, 0);
+	//Assert
+	EXPECT_EQ(readCompareResult, READ_COMPARE_DATA_MATCH);
 }
 

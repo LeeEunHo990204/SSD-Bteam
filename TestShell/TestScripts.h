@@ -2,6 +2,9 @@
 #include <iostream>
 #include "cmd_launcher.cpp"
 
+#define READ_COMPARE_DATA_MISMATCH (-1)
+#define READ_COMPARE_DATA_MATCH (0)
+
 class ITestScripts
 {
 public:

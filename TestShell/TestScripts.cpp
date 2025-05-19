@@ -4,13 +4,12 @@
 int TestScripts1::readCompare(int lba, int data) {
 
 	getShellDev()->write(lba, data);
-	unsigned int readData = getShellDev()->read(lba);
 
-	if (data != readData) {
-		return 1; //ERROR: data mismatch
+	if (data != getShellDev()->read(lba)) {
+		return READ_COMPARE_DATA_MISMATCH; //ERROR: data mismatch
 	}
 	else {
-		return 0; //OK: data match
+		return READ_COMPARE_DATA_MATCH; //OK: data match
 	}
 
 	return 0;
