@@ -9,6 +9,9 @@
 
 using namespace std;
 
+#define MAX_LBA (99)
+#define MIN_LBA (0)
+
 class ICmdLauncher {
 public:
 	virtual void write(int LBA, unsigned int val) = 0;
@@ -32,6 +35,8 @@ public:
     }
     unsigned int read(int LBA) override {
         //system("cp)
+        if ((LBA >= 100) || (LBA < 0))
+            return 0;
         ifstream infile("ssd_output.txt");
         string fileName = "SSD.exe";
         string command = fileName + " R " + to_string(LBA);

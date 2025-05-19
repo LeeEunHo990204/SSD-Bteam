@@ -5,17 +5,17 @@
 using namespace testing;
 using namespace std;
 
-class MockCmdLauncher : public ICmdLauncher {
+class MockUTCmdLauncher : public ICmdLauncher {
 public:
     //MOCK_METHOD(void, write, (int LBA, unsigned int val), (override));
     //MOCK_METHOD(unsigned int, read, (int LBA), (override));
     void write(int LBA, unsigned int val) override {
-        if (LBA >= 100)
+        if ((LBA > MAX_LBA) || (LBA < MIN_LBA))
             return;
         array[LBA] = val;
     }
     unsigned int read(int LBA) override {
-        if (LBA >= 100)
+        if ((LBA > MAX_LBA) || (LBA < 0))
             return 0;
         return array[LBA];
     }
@@ -26,7 +26,7 @@ private:
 class UtFixture : public Test {
 
 public:
-    MockCmdLauncher  mockCmdLauncher;
+    MockUTCmdLauncher  mockCmdLauncher;
     SSDCmdLauncher  ssdCmdLauncher;
 #ifdef   MOCK_TEST
     ShellDeviceDriver cmdLauncher{ &mockCmdLauncher };
@@ -71,6 +71,8 @@ TEST_F(UtFixture, RWTestAllRangePass) {
 }
 
 TEST_F(UtFixture, RWTestOutOfLBA) {
-    cmdLauncher.write(100, 0x12345678);
     EXPECT_EQ(0, cmdLauncher.read(100));
+    cmdLauncher.write(MAX_LBA + 1, 0x12345678);
+    cout << endl << endl << cmdLauncher.read(MAX_LBA + 1) << endl << endl;
+    EXPECT_EQ(0, cmdLauncher.read(MAX_LBA + 1));
 }
