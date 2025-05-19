@@ -60,5 +60,5 @@ TEST_F(ShellFixture, read) {
 
 TEST_F(ShellFixture, testscripts1) {
 	std::string actual = shell->runOneCommand("1_");
-	EXPECT_EQ("TestScripts1", actual);
+	EXPECT_EQ("0", actual);
 }

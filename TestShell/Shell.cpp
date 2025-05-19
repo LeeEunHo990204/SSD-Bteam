@@ -137,17 +137,22 @@ public:
 		else if (command->cmd == "1_" || command->cmd == "1_FullWriteAndReadCompare") {
 			setTestScripts(new TestScripts1);
 			testScripts->runTestScenario();
-			return "TestScripts1";
+			if (testScripts->getResult() == 0) return "PASS\n";
+			return "FAIL\n";
 		}
 
 		else if (command->cmd == "2_" || command->cmd == "2_PartialLBAWrite") {
 			//setTestScripts(new TestScripts2);
 			testScripts->runTestScenario();
+			if (testScripts->getResult() == 0) return "PASS\n";
+			return "FAIL\n";
 		}
 
 		else if (command->cmd == "3_" || command->cmd == "3_WriteReadAging") {
 			//setTestScripts(new TestScripts3);
 			testScripts->runTestScenario();
+			if (testScripts->getResult() == 0) return "PASS\n";
+			return "FAIL\n";
 		}
 	}
 
