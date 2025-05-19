@@ -155,5 +155,24 @@ TEST_F(TestScriptsFixture, TestReadCompareDataMatch)
 
 	//Assert
 	EXPECT_EQ(readCompareResult, READ_COMPARE_DATA_MATCH);
+
+	deleteTS();
+}
+
+TEST_F(TestScriptsFixture, TestReadCompareDataMisMatch)
+{
+	//Arrange
+	factoryCreateTSWithLauncher(BASIC_NAME, &mockLauncher);
+	EXPECT_CALL(mockLauncher, write(RAND_LBA, RAND_NUM))
+		.Times(1);
+	EXPECT_CALL(mockLauncher, read(RAND_LBA))
+		.Times(1)
+		.WillOnce(testing::Return(0xFFFFFFFF));
+
+	//Act
+	int readCompareResult = testScripts->readCompare(RAND_LBA, RAND_NUM);
+
+	//Assert
+	EXPECT_EQ(readCompareResult, READ_COMPARE_DATA_MISMATCH);
 }
 
