@@ -57,10 +57,6 @@ public:
 				break;
 			}
 
-			else {
-				std::cout << "Invalid command. Please try again." << std::endl;
-			}
-
 		}
 	}
 

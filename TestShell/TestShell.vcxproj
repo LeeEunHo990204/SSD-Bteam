@@ -130,7 +130,7 @@
     <ClCompile Include="cmd_launcher.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Shell.cpp" />
-    <ClCompile Include="shell_test.cpp" />
+    <ClCompile Include="test_shell.cpp" />
     <ClCompile Include="TestScripts.cpp" />
     <ClCompile Include="test_cmdLauncher.cpp" />
     <ClCompile Include="test_scripts.cpp" />
