@@ -96,6 +96,10 @@ public:
 		cmdLauncher(cmdLauncher), testScripts(testScripts) {
 	}
 
+	Shell(ICmdLauncher* cmdLauncher) : cmdLauncher(cmdLauncher) {
+		testScripts = nullptr;
+	}
+
 	void run() {
 		std::string cmdLine;
 		while (true) {
@@ -161,14 +165,14 @@ public:
 		}
 
 		else if (command->cmd == "2_" || command->cmd == "2_PartialLBAWrite") {
-			//setTestScripts(new TestScripts2);
+			setTestScripts(new TestScripts2("2_PartialLBAWrite", cmdLauncher));
 			testScripts->runTestScenario();
 			if (testScripts->getResult() == 0) return "PASS";
 			return "FAIL";
 		}
 
 		else if (command->cmd == "3_" || command->cmd == "3_WriteReadAging") {
-			//setTestScripts(new TestScripts3);
+			setTestScripts(new TestScripts3("3_WriteReadAging", cmdLauncher));
 			testScripts->runTestScenario();
 			if (testScripts->getResult() == 0) return "PASS";
 			return "FAIL";
