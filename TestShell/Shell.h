@@ -8,6 +8,8 @@
 #include "CmdLancher.h"
 #include "TestScripts.h"
 
+#define STORAGE_SIZE 100
+
 class Validation {
 public:
 	Validation() {
@@ -136,7 +138,7 @@ public:
 
 		else if (command->cmd == "read" || command->cmd == "READ") {
 			int LBA = stoi(command->params[0]);
-			if (LBA >= 100 || LBA < 0)
+			if (LBA >= STORAGE_SIZE || LBA < 0)
 				return std::string("[Read] LBA ") + std::to_string(LBA) + std::string(" : ") + std::string("ERROR");
 			return std::string("[Read] LBA ") + std::to_string(LBA) + std::string(" : ") + cmdLauncher->read(LBA);
 		}
@@ -146,7 +148,7 @@ public:
 			int size = stoi(command->params[1]);
 			int startLBA = 0;
 			int endLBA = 0;
-			if (LBA >= 100 || LBA < 0) {
+			if (LBA >= STORAGE_SIZE || LBA < 0) {
 				cmdLauncher->erase(LBA, size);
 				return "[Erase] ERROR";
 			}
@@ -158,7 +160,7 @@ public:
 				if (startLBA < 0) startLBA = 0;
 				endLBA = LBA;
 			}
-			if (endLBA > 100) endLBA = 99;
+			if (endLBA >= STORAGE_SIZE) endLBA = 99;
 			for (int i = startLBA; i <= endLBA; i += 10) {
 				if (endLBA - i + 1 < 10) {
 					if (!cmdLauncher->erase(i, endLBA - i + 1)) "[Erase] ERROR";
@@ -174,7 +176,7 @@ public:
 			int startLBA = stoi(command->params[0]);
 			int endLBA = stoi(command->params[1]);
 
-			if (startLBA >= 100 || startLBA < 0 || endLBA >= 100 || endLBA < 0) {
+			if (startLBA >= STORAGE_SIZE || startLBA < 0 || endLBA >= STORAGE_SIZE || endLBA < 0) {
 				cmdLauncher->erase(-1, -1);
 				return "[Erase_range] ERROR";
 			}
@@ -207,7 +209,7 @@ public:
 				return "Out of 4-byte range!";
 			}
 			unsigned int val = stoul(command->params[0], nullptr, 16);
-			for (int LBA = 0; LBA < 100; LBA++) {
+			for (int LBA = 0; LBA < STORAGE_SIZE; LBA++) {
 				cmdLauncher->write(LBA, val);
 			}
 			return "[FullWrite] Done";

@@ -36,9 +36,6 @@ public:
     }
     string read(int LBA) override {
         //system("cp)
-        if ((LBA >= 100) || (LBA < 0))
-            return 0;
-
         string fileName = "SSD.exe";
         string command = fileName + " R " + to_string(LBA);
         system(command.c_str());
@@ -51,8 +48,6 @@ public:
         return data;// system("SSD.exe R 3");//TODO
     }
     bool erase(int LBA, int size) override {
-        if ((LBA >= 100) || (LBA < 0))
-            return false;
         int startAddress = 0;
         int endAddress = 0;
         string fileName = "SSD.exe";
@@ -61,6 +56,8 @@ public:
         cout << command.str() << endl;
 
         system(command.str().c_str());
+        if ((LBA > MAX_LBA) || (LBA < 0) || size < 0 || size > 10)
+            return false;
         return true;
     }
 private:
