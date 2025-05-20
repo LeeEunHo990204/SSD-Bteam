@@ -1,7 +1,7 @@
 
 #include "gmock/gmock.h"
 #include <iostream>
-#include "Shell.cpp"
+#include "Shell.h"
 using namespace testing;
 
 
@@ -13,8 +13,8 @@ int main(int argc, char** argv) {
 	InitGoogleMock();
 	return RUN_ALL_TESTS();
 #else
-	Shell shell;
-	shell.run();
+	Shell* shell = new Shell(new SSDCmdLauncher, new TestScripts1());
+	shell->run();
 	return 0;
 #endif
 }

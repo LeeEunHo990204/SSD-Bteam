@@ -399,5 +399,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-SSD/ssd_nand.txt
-SSD/ssd_output.txt
+*.txt

@@ -24,20 +24,17 @@
     <ClCompile Include="test_cmdLauncher.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
-    <ClCompile Include="cmd_launcher.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="test_scripts.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
     <ClCompile Include="TestScripts.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Shell.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="shell_test.cpp">
+    <ClCompile Include="test_shell.cpp">
       <Filter>테스트 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdLancher.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -48,6 +45,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="TestScripts.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdLancher.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Shell.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

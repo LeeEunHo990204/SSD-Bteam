@@ -60,6 +60,17 @@ TEST_F(SsdTestFixture, writeDuplicateTrue) {
 	EXPECT_EQ(0x5678, ssd.read(0));
 }
 
+TEST_F(SsdTestFixture, eraseTrue) {
+	ssd.write(0, 0x5678);
+	EXPECT_EQ(0x5678, ssd.read(0));
+	EXPECT_TRUE(ssd.erase(0, 10));
+	EXPECT_EQ(0x0, ssd.read(0));
+}
+
+TEST_F(SsdTestFixture, eraseFalse) {
+	EXPECT_FALSE(ssd.erase(0, -1));
+}
+
 TEST(SsdTest, ValidReadCommandParsing)
 {
 	std::vector<std::string> args = { "SSD.exe", "R", "1"};
