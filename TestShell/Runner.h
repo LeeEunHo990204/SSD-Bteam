@@ -29,7 +29,7 @@ public:
 		return filePath;
 	}
 
-	ITestScripts* getTestScripts() const {
+	ITestScripts** getTestScripts() const {
 		return testScripts;
 	}
 
@@ -39,7 +39,7 @@ public:
 
 private:
 	std::string filePath;
-	ITestScripts* testScripts;
+	ITestScripts** testScripts;
 	int scriptsNum;
 };
 
