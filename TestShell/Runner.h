@@ -5,6 +5,7 @@
 #include<string.h>
 
 #include "TestScripts.h"
+#include "CmdLancher.h"
 
 typedef enum RUNNER_STATUS {
 	RUNNER_INIT = 0,
@@ -16,12 +17,11 @@ typedef enum RUNNER_STATUS {
 class Runner
 {
 public:
-	Runner(std::string filePath) : filePath(filePath), testScripts(nullptr), scriptsNum(0) {
+	Runner(std::string filePath) : filePath(filePath), scriptsNum(0) {
+
 	}
+
 	~Runner() {
-		if (testScripts) {
-			delete testScripts;
-		}
 	}
 
 	int parseInputScripts();
@@ -31,7 +31,7 @@ public:
 		return filePath;
 	}
 
-	ITestScripts** getTestScripts() const {
+	std::vector<ITestScripts*> getTestScripts() const {
 		return testScripts;
 	}
 
@@ -42,7 +42,8 @@ public:
 private:
 	std::string filePath;
 	std::ifstream scriptsFile;
-	ITestScripts** testScripts;
+	vector<ITestScripts*> testScripts;
 	int scriptsNum;
+	SSDCmdLauncher ssdLauncher;
 };
 

@@ -58,3 +58,15 @@ TEST_F(TestRunnerFixture, TestInvalidScriptsFile) {
 	EXPECT_EQ(result, -1);
 	deleteRunner();
 }
+
+TEST_F(TestRunnerFixture, TestParsingDefaultScripts) {
+	//Arrange
+	runner = new Runner(DEFAULT_SCRIPTS_PATH);
+
+	//Act
+	int result = runner->parseInputScripts();
+
+	//Assert
+	EXPECT_EQ(4, runner->getScriptsNum());
+	deleteRunner();
+}
