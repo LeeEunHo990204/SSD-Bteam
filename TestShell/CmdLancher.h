@@ -53,8 +53,8 @@ public:
     bool erase(int LBA, int size) override {
         if ((LBA >= 100) || (LBA < 0))
             return false;
-        int startAddress;
-        int endAddress;
+        int startAddress = 0;
+        int endAddress = 0;
         string fileName = "SSD.exe";
         std::stringstream command;
         command << fileName << " E " << LBA << " " << size;
