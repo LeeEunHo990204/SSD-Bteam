@@ -15,14 +15,14 @@ public:
 		return ss.str();
 	}
 	bool erase(int LBA, int size) override {
-		if (LBA < 0 || LBA > 100) return false;
+		if (LBA < 0 || LBA > STORAGE_SIZE) return false;
 		for (int i = LBA; i < LBA + size; i++) {
 			array[i] = 0;
 		}
 		return true;
 	}
 private:
-	unsigned int array[100] = { 0, };
+	unsigned int array[STORAGE_SIZE] = { 0, };
 };
 
 class ShellFixture : public Test {

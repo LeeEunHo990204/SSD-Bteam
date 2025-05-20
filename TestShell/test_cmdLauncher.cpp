@@ -20,7 +20,7 @@ public:
         return array[LBA];
     }
     bool erase(int LBA, int size) override {
-        if (LBA < 0 || LBA > 100) return false;
+        if (LBA < 0 || LBA > MAX_LBA || size < 0 || size > 10) return false;
         for (int i = LBA; i < LBA + size; i++) {
             array[i] = to_string(0);
         }
