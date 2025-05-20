@@ -9,6 +9,9 @@ int DeviceController::run(const CommandInfo& commandInfo) {
 	else if (commandInfo.command == "W") {
 		device_->write(commandInfo.address, commandInfo.data);
 	}
+	else if (commandInfo.command == "E") {
+		device_->erase(commandInfo.address, commandInfo.size);
+	}
 	else {
 		cerr << "Unknown command: " << commandInfo.command << endl;
 		return 1;

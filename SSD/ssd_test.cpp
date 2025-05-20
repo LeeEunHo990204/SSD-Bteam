@@ -122,6 +122,32 @@ TEST(SsdTest, InvalidWriteCommandParsing)
 	EXPECT_FALSE(parser.isValid());
 }
 
+TEST(SsdTest, ValidEraseCommandParsing)
+{
+	std::vector<std::string> args = { "SSD.exe", "E", "1", "10" };
+	std::vector<char*> argv;
+	for (auto& s : args) argv.push_back(const_cast<char*>(s.c_str()));
+	CommandParser parser(argv.size(), argv.data());
+	CommandInfo commandInfo = parser.getCommandInfo();
+
+	EXPECT_TRUE(parser.isValid());
+	EXPECT_EQ(commandInfo.command, "E");
+	EXPECT_EQ(commandInfo.address, 1);
+	EXPECT_EQ(commandInfo.size, 10);
+
+}
+
+TEST(SsdTest, InvalidEraseCommandParsing)
+{
+	std::vector<std::string> args = { "SSD.exe", "E", "1", "11" };
+	std::vector<char*> argv;
+	for (auto& s : args) argv.push_back(const_cast<char*>(s.c_str()));
+	CommandParser parser(argv.size(), argv.data());
+
+	EXPECT_TRUE(parser.isValid());		// command parsing에서는 valid check true로 나옴, ssd 에서 튕겨냄.
+}
+
+
 TEST_F(SsdTestFixture, DeviceControllerValidWriteAndReadTest)
 {
 	std::vector<std::string> args = { "SSD.exe", "W", "1", "12345678" };
