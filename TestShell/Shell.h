@@ -15,6 +15,7 @@ public:
 			"write", "WRITE",
 			"read", "READ",
 			"erase", "ERASE",
+			"erase_range", "ERASE_RANGE",
 			"fullwrite", "FULLWRITE",
 			"fullread", "FULLREAD",
 			"1_", "1_FullWriteAndReadCompare",
@@ -27,6 +28,7 @@ public:
 			{"write", 2}, {"WRITE", 2},
 			{"read", 1}, {"READ", 1},
 			{"erase", 2}, {"ERASE", 2},
+			{"erase_range", 2}, {"ERASE_RANGE", 2},
 			{"fullwrite", 1}, {"FULLWRITE", 1},
 			{"fullread", 0}, {"FULLREAD", 0},
 			{"1_", 0}, {"1_FullWriteAndReadCompare", 0},
@@ -149,6 +151,21 @@ public:
 				return "[Erase] ERROR";
 			}
 			return "[Erase] Done";
+		}
+
+		else if (command->cmd == "erase_range" || command->cmd == "ERASE_RANGE") {
+			int startLBA = stoi(command->params[0]);
+			int endLBA = stoi(command->params[1]);
+			
+			if (startLBA > endLBA) {
+				swap(startLBA, endLBA);
+			}
+			if (startLBA < 0) startLBA = 0;
+			if (endLBA > 100) endLBA = 99;
+			if (!cmdLauncher->erase(startLBA, endLBA - startLBA + 1)) {
+				return "[Erase_range] ERROR";
+			}
+			return "[Erase_range] Done";
 		}
 
 		else if (command->cmd == "exit" || command->cmd == "EXIT") {
