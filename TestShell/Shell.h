@@ -14,6 +14,7 @@ public:
 		cmdSet = {
 			"write", "WRITE",
 			"read", "READ",
+			"erase", "ERASE",
 			"fullwrite", "FULLWRITE",
 			"fullread", "FULLREAD",
 			"1_", "1_FullWriteAndReadCompare",
@@ -25,6 +26,7 @@ public:
 		paramCntMap = {
 			{"write", 2}, {"WRITE", 2},
 			{"read", 1}, {"READ", 1},
+			{"erase", 2}, {"ERASE", 2},
 			{"fullwrite", 1}, {"FULLWRITE", 1},
 			{"fullread", 0}, {"FULLREAD", 0},
 			{"1_", 0}, {"1_FullWriteAndReadCompare", 0},
@@ -132,6 +134,21 @@ public:
 			if (LBA >= 100 || LBA < 0)
 				return std::string("[Read] LBA ") + std::to_string(LBA) + std::string(" : ") + std::string("ERROR");
 			return std::string("[Read] LBA ") + std::to_string(LBA) + std::string(" : ") + cmdLauncher->read(LBA);
+		}
+
+		else if (command->cmd == "erase" || command->cmd == "ERASE") {
+			int LBA = stoi(command->params[0]);
+			int size = stoi(command->params[1]);
+			int startAddress;
+			if(size < 0){
+				startAddress = LBA + size + 1;
+				size *= -1;
+				LBA = startAddress;
+			}
+			if (!cmdLauncher->erase(LBA, size)) {
+				return "[Erase] ERROR";
+			}
+			return "[Erase] Done";
 		}
 
 		else if (command->cmd == "exit" || command->cmd == "EXIT") {
