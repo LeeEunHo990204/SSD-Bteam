@@ -45,3 +45,26 @@ void TestScripts3::runTestScenario() {
 		readCompare(99, randomVal);
 	}
 }
+
+void TestScripts4::runTestScenario() {
+	int loopCnt = 0;
+
+	uint32_t randomVal;
+
+	//TODO: Need to meet requirements
+	for (loopCnt = 0; loopCnt < 30; loopCnt++) {
+
+		for (uint32_t LBA = 2; LBA <= MAX_LBA - 2; LBA = LBA + 2)
+		{
+			randomVal = getRandomUint32();
+			getShellDev()->write(0, randomVal);
+			randomVal = getRandomUint32();
+			getShellDev()->write(0, randomVal);
+			getShellDev()->erase(LBA, 3); // LBA 2~4, 4~6 ...
+			readCompare(LBA, 0);
+			readCompare(LBA + 1, 0);
+			readCompare(LBA + 2, 0);
+
+		}
+	}
+}

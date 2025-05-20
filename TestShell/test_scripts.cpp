@@ -45,6 +45,7 @@ public:
 	std::string TS1_NAME = "1_FullWriteAndReadCompare";
 	std::string TS2_NAME = "2_PartialLBAWrite";
 	std::string TS3_NAME = "3_PartialLBARead";
+	std::string TS4_NAME = "4_EraseAndWriteAging";
 	std::string BASIC_NAME = "BasicTest";
 
 	int RAND_NUM = 0x00110011;

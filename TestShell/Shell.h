@@ -21,6 +21,7 @@ public:
 			"1_", "1_FullWriteAndReadCompare",
 			"2_", "2_PartialLBAWrite",
 			"3_", "3_WriteReadAging",
+			"4_", "4_WriteReadAging",
 			"exit", "EXIT",
 			"help", "HELP"
 		};
@@ -33,7 +34,8 @@ public:
 			{"fullread", 0}, {"FULLREAD", 0},
 			{"1_", 0}, {"1_FullWriteAndReadCompare", 0},
 			{"2_", 0}, {"2_PartialLBAWrite", 0},
-			{"3_", 0}, {"3_WriteReadAging", 0}
+			{"3_", 0}, {"3_WriteReadAging", 0},
+			{"4_", 0 }, {"4_WriteReadAging", 0}
 		};
 	}
 
@@ -209,6 +211,13 @@ public:
 
 		else if (command->cmd == "3_" || command->cmd == "3_WriteReadAging") {
 			setTestScripts(new TestScripts3("3_WriteReadAging", cmdLauncher));
+			testScripts->runTestScenario();
+			if (testScripts->getResult() == 0) return "PASS";
+			return "FAIL";
+		}
+
+		else if (command->cmd == "4_" || command->cmd == "4_EraseAndWriteAging") {
+			setTestScripts(new TestScripts4("4_WriteReadAging", cmdLauncher));
 			testScripts->runTestScenario();
 			if (testScripts->getResult() == 0) return "PASS";
 			return "FAIL";
