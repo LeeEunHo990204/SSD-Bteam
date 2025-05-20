@@ -23,7 +23,7 @@ public:
 	int writeAndReadCompare(int lba, unsigned int data) {
 		getShellDev()->write(lba, data);
 
-		if (data != getShellDev()->read(lba)) {
+		if (data != std::stoul(getShellDev()->read(lba), nullptr, 16)) {
 			testResult = TEST_FAIL;
 			return READ_COMPARE_DATA_MISMATCH; //ERROR: data mismatch
 		}
@@ -35,7 +35,7 @@ public:
 	int readCompare(int lba, int data) {
 		getShellDev()->write(lba, data);
 
-		if (data != getShellDev()->read(lba)) {
+		if (data != std::stoul(getShellDev()->read(lba), nullptr, 16)) {
 			testResult = TEST_FAIL;
 			return READ_COMPARE_DATA_MISMATCH; //ERROR: data mismatch
 		}

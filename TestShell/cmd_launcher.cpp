@@ -15,7 +15,7 @@ using namespace std;
 class ICmdLauncher {
 public:
 	virtual void write(int LBA, unsigned int val) = 0;
-	virtual unsigned int read(int LBA) = 0;
+	virtual string read(int LBA) = 0;
 };
 
 class SSDCmdLauncher : public ICmdLauncher {
@@ -33,7 +33,7 @@ public:
         system(command.c_str());
 
     }
-    unsigned int read(int LBA) override {
+    string read(int LBA) override {
         //system("cp)
         if ((LBA >= 100) || (LBA < 0))
             return 0;
@@ -43,14 +43,10 @@ public:
         system(command.c_str());
 
         ifstream infile("ssd_output.txt");
-        string str;
-        unsigned int data = 0;
-        infile >> str;
-        cout << "read : " << str << endl;
+        string data;
+        infile >> data;
+        cout << "read : " << data << endl;
         infile.close();
-        if (str != "ERROR") {
-            data = stoul(str, nullptr, 16);
-        }
         return data;// system("SSD.exe R 3");//TODO
     }
 private:
@@ -64,7 +60,7 @@ public:
     void write(int LBA, unsigned int val) {
         m_cmdLauncher->write(LBA, val);
     }
-    unsigned int read(int LBA) {
+    string read(int LBA) {
         return m_cmdLauncher->read(LBA);
     }
 protected:

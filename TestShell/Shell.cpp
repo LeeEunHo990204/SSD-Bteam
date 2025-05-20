@@ -131,7 +131,7 @@ public:
 			int LBA = stoi(command->params[0]);
 			if (LBA >= 100 || LBA < 0)
 				return std::string("[Read] LBA ") + std::to_string(LBA) + std::string(" : ") + std::string("ERROR");
-			return std::string("[Read] LBA ") + std::to_string(LBA) + std::string(" : ") + std::to_string(cmdLauncher->read(LBA));
+			return std::string("[Read] LBA ") + std::to_string(LBA) + std::string(" : ") + cmdLauncher->read(LBA);
 		}
 
 		else if (command->cmd == "exit" || command->cmd == "EXIT") {
@@ -153,7 +153,7 @@ public:
 		else if (command->cmd == "fullread" || command->cmd == "FULLREAD") {
 			std::string result = "[FullRead]";
 			for (int LBA = 0; LBA < 100; LBA++) {
-				result += std::string("LBA ") + std::to_string(LBA) + std::string(" : ") + std::to_string(cmdLauncher->read(LBA));
+				result += std::string("LBA ") + std::to_string(LBA) + std::string(" : ") + cmdLauncher->read(LBA);
 				if (LBA < 99) result += std::string("\n");
 			}
 			return result;
