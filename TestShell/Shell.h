@@ -122,6 +122,9 @@ public:
 
 		if (command->cmd == "write" || command->cmd == "WRITE") {
 			int LBA = stoi(command->params[0]);
+			if (isOutOf4ByteRange(command->params[1])) {
+				return "Out of 4-byte range!";
+			}
 			unsigned int val = stoul(command->params[1], nullptr, 16);
 			cmdLauncher->write(LBA, val);
 			return "[Write] Done";
@@ -143,6 +146,9 @@ public:
 		}
 
 		else if (command->cmd == "fullwrite" || command->cmd == "FULLWRITE") {
+			if (isOutOf4ByteRange(command->params[0])) {
+				return "Out of 4-byte range!";
+			}
 			unsigned int val = stoul(command->params[0], nullptr, 16);
 			for (int LBA = 0; LBA < 100; LBA++) {
 				cmdLauncher->write(LBA, val);
@@ -203,5 +209,15 @@ private:
 		}
 
 		return result;
+	}
+
+	bool isOutOf4ByteRange(const std::string& hexStr) {
+		try {
+			unsigned long long value = std::stoull(hexStr, nullptr, 16);
+			return value > 0xFFFFFFFFULL;
+		}
+		catch (const std::exception&) {
+			return true;
+		}
 	}
 };
