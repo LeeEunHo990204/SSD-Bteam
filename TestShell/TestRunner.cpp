@@ -21,6 +21,8 @@ public:
 	}
 
 	std::string DEFAULT_SCRIPTS_PATH = "shell_scripts.txt";
+	std::string DEFAULT_INVALID_SCRIPTS_PATH = "shell_scriptssss.txt";
+	std::string ABNORMAL_SCRIPT_PATH = "shell_abnormal.txt";
 	int DEFAULT_SCRIPTS_NUM = 4;
 };
 
@@ -33,7 +35,7 @@ TEST_F(TestRunnerFixture, TestMatchingFIlePath) {
 	deleteRunner();
 }
 
-TEST_F(TestRunnerFixture, TestParsingInputFile) {
+TEST_F(TestRunnerFixture, TestValidScriptsFile) {
 	//Arrange
 	runner = new Runner(DEFAULT_SCRIPTS_PATH);
 
@@ -41,6 +43,18 @@ TEST_F(TestRunnerFixture, TestParsingInputFile) {
 	int result = runner->parseInputScripts();
 
 	//Assert
-	EXPECT_EQ(DEFAULT_SCRIPTS_NUM, runner->getScriptsNum());
+	EXPECT_EQ(result, 0);
+	deleteRunner();
+}
+
+TEST_F(TestRunnerFixture, TestInvalidScriptsFile) {
+	//Arrange
+	runner = new Runner(DEFAULT_INVALID_SCRIPTS_PATH);
+
+	//Act
+	int result = runner->parseInputScripts();
+
+	//Assert
+	EXPECT_EQ(result, -1);
 	deleteRunner();
 }

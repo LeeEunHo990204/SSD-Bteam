@@ -1,6 +1,7 @@
 #pragma once
 
 #include<iostream>
+#include<fstream>
 #include<string.h>
 
 #include "TestScripts.h"
@@ -15,7 +16,8 @@ typedef enum RUNNER_STATUS {
 class Runner
 {
 public:
-	Runner(std::string filePath) : filePath(filePath), testScripts(nullptr), scriptsNum(0) {}
+	Runner(std::string filePath) : filePath(filePath), testScripts(nullptr), scriptsNum(0) {
+	}
 	~Runner() {
 		if (testScripts) {
 			delete testScripts;
@@ -39,6 +41,7 @@ public:
 
 private:
 	std::string filePath;
+	std::ifstream scriptsFile;
 	ITestScripts** testScripts;
 	int scriptsNum;
 };
