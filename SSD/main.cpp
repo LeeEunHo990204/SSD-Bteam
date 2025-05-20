@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
 	CommandInfo commandinfo = commandParser.getCommandInfo();
 	DeviceController deviceController(&ssd);
 
-	cout << "[logging] CMD :" << commandParser.getCommandInfo().command << endl;
+	cout << "[logging] CMD :" << commandinfo.command << endl;
 	cout << "[logging] argc :" << argc << endl;
 	
 	return deviceController.run(commandinfo);

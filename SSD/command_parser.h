@@ -7,7 +7,11 @@
 struct CommandInfo {
     std::string command;
     unsigned int address;
-    unsigned int data;
+
+    union {
+        unsigned int data;
+        unsigned int size;
+    };
 };
 
 class CommandParser {

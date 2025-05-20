@@ -99,6 +99,7 @@ bool SSD::erase(int idx, int size) {
 		std::cerr << "유효하지 않은 주소입니다!" << std::endl;
 		return false;
 	}
+
 	if (size < 0 || size > 10) {
 		cout << "size is wrong" << endl;
 		return isAddressValid(-1);

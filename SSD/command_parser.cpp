@@ -10,6 +10,7 @@ bool CommandParser::parse(int argc, char* argv[]) {
         std::cout << "Usage:" << std::endl;
         std::cout << "  ssd.exe R [address]" << std::endl;
         std::cout << "  ssd.exe W [address] [data(hex)]" << std::endl;
+        std::cout << "  ssd.exe E [address] [size(dec)]" << std::endl;
         return false;
     }
     commandInfo.command = argv[1];
@@ -22,7 +23,13 @@ bool CommandParser::parse(int argc, char* argv[]) {
             std::cout << "Out of 4-byte range!" << std::endl;
             return false;
         }
-        commandInfo.data = std::stoul(argv[3], nullptr, 16);
+
+        if (commandInfo.command == "W") {
+            commandInfo.data = std::stoul(argv[3], nullptr, 16);
+        }
+        else{
+            commandInfo.data = std::stoul(argv[3], nullptr, 10);
+        }
     }
     return true;
        
