@@ -14,6 +14,8 @@ public:
 		cmdSet = {
 			"write", "WRITE",
 			"read", "READ",
+			"erase", "ERASE",
+			"erase_range", "ERASE_RANGE",
 			"fullwrite", "FULLWRITE",
 			"fullread", "FULLREAD",
 			"1_", "1_FullWriteAndReadCompare",
@@ -25,6 +27,8 @@ public:
 		paramCntMap = {
 			{"write", 2}, {"WRITE", 2},
 			{"read", 1}, {"READ", 1},
+			{"erase", 2}, {"ERASE", 2},
+			{"erase_range", 2}, {"ERASE_RANGE", 2},
 			{"fullwrite", 1}, {"FULLWRITE", 1},
 			{"fullread", 0}, {"FULLREAD", 0},
 			{"1_", 0}, {"1_FullWriteAndReadCompare", 0},
@@ -132,6 +136,36 @@ public:
 			if (LBA >= 100 || LBA < 0)
 				return std::string("[Read] LBA ") + std::to_string(LBA) + std::string(" : ") + std::string("ERROR");
 			return std::string("[Read] LBA ") + std::to_string(LBA) + std::string(" : ") + cmdLauncher->read(LBA);
+		}
+
+		else if (command->cmd == "erase" || command->cmd == "ERASE") {
+			int LBA = stoi(command->params[0]);
+			int size = stoi(command->params[1]);
+			int startAddress;
+			if(size < 0){
+				startAddress = LBA + size + 1;
+				size *= -1;
+				LBA = startAddress;
+			}
+			if (!cmdLauncher->erase(LBA, size)) {
+				return "[Erase] ERROR";
+			}
+			return "[Erase] Done";
+		}
+
+		else if (command->cmd == "erase_range" || command->cmd == "ERASE_RANGE") {
+			int startLBA = stoi(command->params[0]);
+			int endLBA = stoi(command->params[1]);
+			
+			if (startLBA > endLBA) {
+				swap(startLBA, endLBA);
+			}
+			if (startLBA < 0) startLBA = 0;
+			if (endLBA > 100) endLBA = 99;
+			if (!cmdLauncher->erase(startLBA, endLBA - startLBA + 1)) {
+				return "[Erase_range] ERROR";
+			}
+			return "[Erase_range] Done";
 		}
 
 		else if (command->cmd == "exit" || command->cmd == "EXIT") {

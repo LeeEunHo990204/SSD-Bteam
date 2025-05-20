@@ -9,16 +9,20 @@
 
 #include "device.h"
 
+#define STORAGE_SIZE 100
+
 using namespace std;
 
 class SSD : public IDevice {
 public:
 	SSD();
+	~SSD();
 	void write(int idx, int value);
+	bool erase(int idx, int size);
 	unsigned int read(int idx);
 	bool isAddressValid(int idx);
 private:
-	unsigned int storage[100] = { 0, };
+	unsigned int storage[STORAGE_SIZE] = { 0, };
 	const string filename = "ssd_nand.txt";
 	fstream file;
 	const int LINE_LENGTH = 20;
