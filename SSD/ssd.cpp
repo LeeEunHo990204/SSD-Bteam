@@ -4,6 +4,10 @@ SSD::SSD(void) {
 	init();
 }
 
+SSD::~SSD() {
+	file.close();
+}
+
 void SSD::init(void) {
 	file.open(filename, std::ios::in | std::ios::out);
 
@@ -85,6 +89,32 @@ unsigned int SSD::read(int idx) {
 	cout << "0x" << std::uppercase << hex << std::setw(8) << std::setfill('0') << storage[idx] << endl;
 	outfile.close();
 	return storage[idx];
+}
+
+bool SSD::erase(int idx, int size) {
+	if (!isAddressValid(idx)) {
+		std::cerr << "유효하지 않은 주소입니다!" << std::endl;
+		return false;
+	}
+	if (size < 0 || size > 10) {
+		cout << "size is wrong" << endl;
+		return isAddressValid(-1);
+	}
+	string line;
+	int startAddress = idx;
+	int endAddress = (idx + size - 1 < 100) ? idx + size - 1 : 99;
+	if (!file.is_open()) {
+		std::cerr << "파일 생성에 실패했습니다!" << std::endl;
+		return false;
+	}
+	file.seekp((LINE_LENGTH + 1) * startAddress, std::ios::beg);
+	for (int i = startAddress; i <= endAddress; i++) {
+		storage[i] = 0;
+		file << std::dec << i << " 0x00000000";
+		getline(file, line);
+	}
+
+	return true;
 }
 
 bool SSD::isAddressValid(int idx) {
