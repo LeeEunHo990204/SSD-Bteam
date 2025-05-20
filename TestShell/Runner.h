@@ -22,6 +22,10 @@ public:
 	}
 
 	~Runner() {
+		for (auto ptr : testScripts) {
+			delete ptr;
+		}
+		testScripts.clear();
 	}
 
 	int parseInputScripts();

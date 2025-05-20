@@ -68,5 +68,7 @@ TEST_F(TestRunnerFixture, TestParsingDefaultScripts) {
 
 	//Assert
 	EXPECT_EQ(4, runner->getScriptsNum());
+	//TODO: Need to compare based on vector size 
+	//EXPECT_EQ(4, runner->getTestScripts().size());
 	deleteRunner();
 }
