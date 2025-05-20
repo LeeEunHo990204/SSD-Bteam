@@ -71,7 +71,7 @@ private:
 
     std::string getTimeString4FileName() {
         std::tm local_tm = getTime();
-        
+
         std::ostringstream oss;
         cout << "!!";
         oss << "until_" << std::put_time(&local_tm, "%y%m%d_%Hh_%Mm_%Ss") << ".log";
