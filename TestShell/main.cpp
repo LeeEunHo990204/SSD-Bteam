@@ -2,6 +2,7 @@
 #include "gmock/gmock.h"
 #include <iostream>
 #include "Shell.h"
+#include "Runner.h"
 using namespace testing;
 
 
@@ -20,6 +21,7 @@ int main(int argc, char** argv) {
 	else if (argc == 2) {
 		//TODO: Implementation of runner
 		std::cout << "Runner execution" << std::endl;
+		Runner* runner = new Runner();
 	}
 	else {
 		//TODO: print help, useage message
