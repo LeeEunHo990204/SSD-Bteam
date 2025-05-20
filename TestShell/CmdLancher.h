@@ -16,6 +16,7 @@ class ICmdLauncher {
 public:
     virtual void write(int LBA, unsigned int val) = 0;
     virtual string read(int LBA) = 0;
+    virtual bool erase(int LBA, int size) = 0;
 };
 
 class SSDCmdLauncher : public ICmdLauncher {
@@ -49,6 +50,19 @@ public:
         infile.close();
         return data;// system("SSD.exe R 3");//TODO
     }
+    bool erase(int LBA, int size) override {
+        if ((LBA >= 100) || (LBA < 0))
+            return false;
+        int startAddress = 0;
+        int endAddress = 0;
+        string fileName = "SSD.exe";
+        std::stringstream command;
+        command << fileName << " E " << LBA << " " << size;
+        cout << command.str() << endl;
+
+        system(command.str().c_str());
+        return true;
+    }
 private:
     const string filename = "ssd_nand.txt";
 };
@@ -62,6 +76,9 @@ public:
     }
     string read(int LBA) {
         return m_cmdLauncher->read(LBA);
+    }
+    bool erase(int LBA, int size) {
+        return m_cmdLauncher->erase(LBA, size);
     }
 protected:
     ICmdLauncher* m_cmdLauncher;

@@ -2,6 +2,7 @@
 #include "ssd.h"
 #include "command_parser.h"
 #include "mock.h"
+#include "device_controller.h"
 
 using namespace testing;
 using namespace std;
@@ -59,16 +60,28 @@ TEST_F(SsdTestFixture, writeDuplicateTrue) {
 	EXPECT_EQ(0x5678, ssd.read(0));
 }
 
+TEST_F(SsdTestFixture, eraseTrue) {
+	ssd.write(0, 0x5678);
+	EXPECT_EQ(0x5678, ssd.read(0));
+	EXPECT_TRUE(ssd.erase(0, 10));
+	EXPECT_EQ(0x0, ssd.read(0));
+}
+
+TEST_F(SsdTestFixture, eraseFalse) {
+	EXPECT_FALSE(ssd.erase(0, -1));
+}
+
 TEST(SsdTest, ValidReadCommandParsing)
 {
 	std::vector<std::string> args = { "SSD.exe", "R", "1"};
 	std::vector<char*> argv;
 	for (auto& s : args) argv.push_back(const_cast<char*>(s.c_str()));
-	CommandParser parser(argv.size(), argv.data());
+	CommandParser parser(argv.size(), argv.data());	
+	CommandInfo commandInfo = parser.getCommandInfo();
 
 	EXPECT_TRUE(parser.isValid());
-	EXPECT_EQ(parser.getCommand(), "R");
-	EXPECT_EQ(parser.getLBA(), 1);
+	EXPECT_EQ(commandInfo.command, "R");
+	EXPECT_EQ(commandInfo.address, 1);
 
 }
 TEST(SsdTest, InvalidLBAReadCommandParsing)
@@ -77,10 +90,11 @@ TEST(SsdTest, InvalidLBAReadCommandParsing)
 	std::vector<char*> argv;
 	for (auto& s : args) argv.push_back(const_cast<char*>(s.c_str()));
 	CommandParser parser(argv.size(), argv.data());
+	CommandInfo commandInfo = parser.getCommandInfo();
 
 	EXPECT_TRUE(parser.isValid());
-	EXPECT_EQ(parser.getCommand(), "R");
-	EXPECT_EQ(parser.getLBA(), 1000);
+	EXPECT_EQ(commandInfo.command, "R");
+	EXPECT_EQ(commandInfo.address, 1000);
 
 }
 TEST(SsdTest, ValidWriteCommandParsing)
@@ -89,11 +103,12 @@ TEST(SsdTest, ValidWriteCommandParsing)
 	std::vector<char*> argv;
 	for (auto& s : args) argv.push_back(const_cast<char*>(s.c_str()));
 	CommandParser parser(argv.size(), argv.data());
+	CommandInfo commandInfo = parser.getCommandInfo();
 
 	EXPECT_TRUE(parser.isValid());
-	EXPECT_EQ(parser.getCommand(), "W");
-	EXPECT_EQ(parser.getLBA(), 1);
-	EXPECT_EQ(parser.getData(), 0xFFFFFFFF);
+	EXPECT_EQ(commandInfo.command, "W");
+	EXPECT_EQ(commandInfo.address, 1);
+	EXPECT_EQ(commandInfo.data, 0xFFFFFFFF);
 
 }
 
@@ -105,4 +120,29 @@ TEST(SsdTest, InvalidWriteCommandParsing)
 	CommandParser parser(argv.size(), argv.data());
 
 	EXPECT_FALSE(parser.isValid());
+}
+
+TEST_F(SsdTestFixture, DeviceControllerValidWriteAndReadTest)
+{
+	std::vector<std::string> args = { "SSD.exe", "W", "1", "12345678" };
+	std::vector<char*> argv;
+	for (auto& s : args) argv.push_back(const_cast<char*>(s.c_str()));
+	CommandParser parser(argv.size(), argv.data());
+	CommandInfo commandInfo = parser.getCommandInfo();
+
+	DeviceController deviceController(&ssd);
+	
+	EXPECT_EQ(deviceController.run(commandInfo), 0);	// run 수행 결과 이상 없음 확인
+
+	args = { "SSD.exe", "R", "1" };  
+	argv.clear();
+	for (auto& s : args) argv.push_back(const_cast<char*>(s.c_str()));
+
+	CommandParser parser2(argv.size(), argv.data());
+	commandInfo = parser.getCommandInfo();
+
+	EXPECT_EQ(deviceController.run(commandInfo), 0);	// run 수행 결과 이상 없음 확인
+
+	
+
 }
