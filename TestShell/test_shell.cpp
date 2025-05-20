@@ -76,3 +76,8 @@ TEST_F(ShellFixture, testscripts1) {
 	std::string actual = shell->runCommand("1_");
 	EXPECT_EQ("PASS", actual);
 }
+
+TEST_F(ShellFixture, testscripts4) {
+	std::string actual = shell->runCommand("4_");
+	EXPECT_EQ("PASS", actual);
+}
