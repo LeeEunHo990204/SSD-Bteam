@@ -1,5 +1,5 @@
 #include "gmock/gmock.h"
-#include "Shell.cpp"
+#include "Shell.h"
 using namespace testing;
 
 class MockCmdLauncher : public ICmdLauncher {

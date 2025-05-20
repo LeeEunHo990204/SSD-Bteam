@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CmdLancher.h" />
+    <ClInclude Include="Shell.h" />
     <ClInclude Include="test.h" />
     <ClInclude Include="TestScripts.h" />
   </ItemGroup>
