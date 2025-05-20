@@ -1,6 +1,8 @@
 #include "gmock/gmock.h"
 #include "ssd.h"
 #include "command_parser.h"
+#include "device_controller.h"
+#include "buffer.h"
 
 using namespace testing;
 using namespace std;
@@ -55,22 +57,11 @@ int main(int argc, char* argv[]) {
 #else
 
 	CommandParser commandParser(argc, argv);
-	SSD ssd;
-
-	cout << "[logging] CMD :" << commandParser.getCommand() << endl;
-	cout << "[logging] argc :" << argc << endl;
-	if (commandParser.getCommand() == "R") {
-		ssd.read(commandParser.getLBA());
-	}
-	else if (commandParser.getCommand() == "W") {
-		ssd.write(commandParser.getLBA(), commandParser.getData());
-	}
-	else {
-		cerr << "Unknown command: " << commandParser.getCommand() << endl;
-		return 1;
-	}
-
-	return 0;
+	Buffer buffer;
+	CommandInfo commandinfo = commandParser.getCommandInfo();
+	DeviceController deviceController(&buffer.ssd, &buffer);
+	
+	return deviceController.run(commandinfo);
 #endif
 }
 

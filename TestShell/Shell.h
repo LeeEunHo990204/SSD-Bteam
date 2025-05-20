@@ -8,28 +8,36 @@
 #include "CmdLancher.h"
 #include "TestScripts.h"
 
+#define STORAGE_SIZE 100
+
 class Validation {
 public:
 	Validation() {
 		cmdSet = {
 			"write", "WRITE",
 			"read", "READ",
+			"erase", "ERASE",
+			"erase_range", "ERASE_RANGE",
 			"fullwrite", "FULLWRITE",
 			"fullread", "FULLREAD",
 			"1_", "1_FullWriteAndReadCompare",
 			"2_", "2_PartialLBAWrite",
 			"3_", "3_WriteReadAging",
+			"4_", "4_EraseAndWriteAging",
 			"exit", "EXIT",
 			"help", "HELP"
 		};
 		paramCntMap = {
 			{"write", 2}, {"WRITE", 2},
 			{"read", 1}, {"READ", 1},
+			{"erase", 2}, {"ERASE", 2},
+			{"erase_range", 2}, {"ERASE_RANGE", 2},
 			{"fullwrite", 1}, {"FULLWRITE", 1},
 			{"fullread", 0}, {"FULLREAD", 0},
 			{"1_", 0}, {"1_FullWriteAndReadCompare", 0},
 			{"2_", 0}, {"2_PartialLBAWrite", 0},
-			{"3_", 0}, {"3_WriteReadAging", 0}
+			{"3_", 0}, {"3_WriteReadAging", 0},
+			{"4_", 0 }, {"4_EraseAndWriteAging", 0}
 		};
 	}
 
@@ -122,6 +130,9 @@ public:
 
 		if (command->cmd == "write" || command->cmd == "WRITE") {
 			int LBA = stoi(command->params[0]);
+			if (isOutOf4ByteRange(command->params[1])) {
+				return "Out of 4-byte range!";
+			}
 			unsigned int val = stoul(command->params[1], nullptr, 16);
 			cmdLauncher->write(LBA, val);
 			return "[Write] Done";
@@ -129,9 +140,62 @@ public:
 
 		else if (command->cmd == "read" || command->cmd == "READ") {
 			int LBA = stoi(command->params[0]);
-			if (LBA >= 100 || LBA < 0)
+			if (LBA >= STORAGE_SIZE || LBA < 0)
 				return std::string("[Read] LBA ") + std::to_string(LBA) + std::string(" : ") + std::string("ERROR");
 			return std::string("[Read] LBA ") + std::to_string(LBA) + std::string(" : ") + cmdLauncher->read(LBA);
+		}
+
+		else if (command->cmd == "erase" || command->cmd == "ERASE") {
+			int LBA = stoi(command->params[0]);
+			int size = stoi(command->params[1]);
+			int startLBA = 0;
+			int endLBA = 0;
+			if (LBA >= STORAGE_SIZE || LBA < 0) {
+				cmdLauncher->erase(LBA, size);
+				return "[Erase] ERROR";
+			}
+			startLBA = LBA;
+			endLBA = LBA + size - 1;
+			if (size < 0) {
+				startLBA = LBA + size + 1;
+				size *= -1;
+				if (startLBA < 0) startLBA = 0;
+				endLBA = LBA;
+			}
+			if (endLBA >= STORAGE_SIZE) endLBA = 99;
+			for (int i = startLBA; i <= endLBA; i += 10) {
+				if (endLBA - i + 1 < 10) {
+					if (!cmdLauncher->erase(i, endLBA - i + 1)) "[Erase] ERROR";
+				}
+				else {
+					if (!cmdLauncher->erase(i, 10)) "[Erase] ERROR";
+				}
+			}
+			return "[Erase] Done";
+		}
+
+		else if (command->cmd == "erase_range" || command->cmd == "ERASE_RANGE") {
+			int startLBA = stoi(command->params[0]);
+			int endLBA = stoi(command->params[1]);
+
+			if (startLBA >= STORAGE_SIZE || startLBA < 0 || endLBA >= STORAGE_SIZE || endLBA < 0) {
+				cmdLauncher->erase(-1, -1);
+				return "[Erase_range] ERROR";
+			}
+			
+			if (startLBA > endLBA) {
+				swap(startLBA, endLBA);
+			}
+			for (int i = startLBA; i <= endLBA; i += 10) {
+				if (endLBA - i + 1 < 10) {
+					if (!cmdLauncher->erase(i, endLBA - i + 1)) "[Erase_range] ERROR";
+				}
+				else {
+					if (!cmdLauncher->erase(i, 10)) "[Erase_range] ERROR";
+				}
+			}
+
+			return "[Erase_range] Done";
 		}
 
 		else if (command->cmd == "exit" || command->cmd == "EXIT") {
@@ -143,8 +207,11 @@ public:
 		}
 
 		else if (command->cmd == "fullwrite" || command->cmd == "FULLWRITE") {
+			if (isOutOf4ByteRange(command->params[0])) {
+				return "Out of 4-byte range!";
+			}
 			unsigned int val = stoul(command->params[0], nullptr, 16);
-			for (int LBA = 0; LBA < 100; LBA++) {
+			for (int LBA = 0; LBA < STORAGE_SIZE; LBA++) {
 				cmdLauncher->write(LBA, val);
 			}
 			return "[FullWrite] Done";
@@ -179,6 +246,13 @@ public:
 			if (testScripts->getResult() == 0) return "PASS";
 			return "FAIL";
 		}
+
+		else if (command->cmd == "4_" || command->cmd == "4_EraseAndWriteAging") {
+			setTestScripts(new TestScripts4("4_WriteReadAging", cmdLauncher));
+			testScripts->runTestScenario();
+			if (testScripts->getResult() == 0) return "PASS";
+			return "FAIL";
+		}
 	}
 
 	void setTestScripts(ITestScripts* testScripts) {
@@ -203,5 +277,15 @@ private:
 		}
 
 		return result;
+	}
+
+	bool isOutOf4ByteRange(const std::string& hexStr) {
+		try {
+			unsigned long long value = std::stoull(hexStr, nullptr, 16);
+			return value > 0xFFFFFFFFULL;
+		}
+		catch (const std::exception&) {
+			return true;
+		}
 	}
 };

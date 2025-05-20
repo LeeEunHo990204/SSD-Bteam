@@ -14,8 +14,15 @@ public:
 		ss << std::hex << std::uppercase << array[LBA];
 		return ss.str();
 	}
+	bool erase(int LBA, int size) override {
+		if (LBA < 0 || LBA > STORAGE_SIZE) return false;
+		for (int i = LBA; i < LBA + size; i++) {
+			array[i] = 0;
+		}
+		return true;
+	}
 private:
-	unsigned int array[100] = { 0, };
+	unsigned int array[STORAGE_SIZE] = { 0, };
 };
 
 class ShellFixture : public Test {
@@ -60,7 +67,17 @@ TEST_F(ShellFixture, read) {
 	EXPECT_EQ("[Read] LBA 1 : 0", actual);
 }
 
+TEST_F(ShellFixture, erase) {
+	std::string actual = shell->runCommand("ERASE 1 5");
+	EXPECT_EQ("[Erase] Done", actual);
+}
+
 TEST_F(ShellFixture, testscripts1) {
 	std::string actual = shell->runCommand("1_");
+	EXPECT_EQ("PASS", actual);
+}
+
+TEST_F(ShellFixture, testscripts4) {
+	std::string actual = shell->runCommand("4_");
 	EXPECT_EQ("PASS", actual);
 }

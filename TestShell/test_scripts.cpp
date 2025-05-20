@@ -5,6 +5,7 @@ class MockLauncher : public ICmdLauncher {
 public:
 	MOCK_METHOD(void, write, (int LBA, unsigned int val), (override));
 	MOCK_METHOD(string, read, (int LBA), (override));
+	MOCK_METHOD(bool, erase, (int LBA, int size), (override));
 };
 
 class TestScriptsFixture : public ::testing::Test
@@ -44,6 +45,7 @@ public:
 	std::string TS1_NAME = "1_FullWriteAndReadCompare";
 	std::string TS2_NAME = "2_PartialLBAWrite";
 	std::string TS3_NAME = "3_PartialLBARead";
+	std::string TS4_NAME = "4_EraseAndWriteAging";
 	std::string BASIC_NAME = "BasicTest";
 
 	int RAND_NUM = 0x00110011;
@@ -167,6 +169,7 @@ TEST_F(TestScriptsFixture, TestReadCompareDataMatch)
 		.WillOnce(testing::Return(ss.str()));
 
 	//Act
+	testScripts->getShellDev()->write(RAND_LBA, RAND_NUM);
 	int readCompareResult = testScripts->readCompare(RAND_LBA, RAND_NUM);
 
 	//Assert
@@ -185,6 +188,7 @@ TEST_F(TestScriptsFixture, TestReadCompareDataMisMatch)
 		.WillOnce(testing::Return("0xFFFFFFFF"));
 
 	//Act
+	testScripts->getShellDev()->write(RAND_LBA, RAND_NUM);
 	int readCompareResult = testScripts->readCompare(RAND_LBA, RAND_NUM);
 
 	//Assert

@@ -4,6 +4,10 @@ SSD::SSD(void) {
 	init();
 }
 
+SSD::~SSD() {
+	file.close();
+}
+
 void SSD::init(void) {
 	file.open(filename, std::ios::in | std::ios::out);
 
@@ -14,8 +18,8 @@ void SSD::init(void) {
 			return;
 		}
 
-		for (int i = 0; i < 100; i++) {
-			outfile << setw(LINE_LENGTH - 1) << std::left << i << "\n";
+		for (int i = 0; i < STORAGE_SIZE; i++) {
+			outfile << setw(LINE_LENGTH - 1) << std::left << to_string(i) + " 0x00000000" << "\n";
 		}
 
 		outfile.close();
@@ -29,7 +33,7 @@ void SSD::init(void) {
 
 	string line;
 
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < STORAGE_SIZE; i++) {
 		getline(file, line);
 		std::istringstream iss(line);
 		std::string index_part, hex_part;
@@ -52,7 +56,7 @@ void SSD::init(void) {
 	}
 }
 
-void SSD::write(int idx, int value) {
+void SSD::write(int idx, unsigned int value) {
 	if (!isAddressValid(idx)) {
 		std::cerr << "유효하지 않은 주소입니다!" << std::endl;
 		return;
@@ -87,8 +91,34 @@ unsigned int SSD::read(int idx) {
 	return storage[idx];
 }
 
+bool SSD::erase(int idx, int size) {
+	if (!isAddressValid(idx)) {
+		std::cerr << "유효하지 않은 주소입니다!" << std::endl;
+		return false;
+	}
+	if (size < 0 || size > 10) {
+		cout << "size is wrong" << endl;
+		return isAddressValid(-1);
+	}
+	string line;
+	int startAddress = idx;
+	int endAddress = (idx + size - 1 < STORAGE_SIZE) ? idx + size - 1 : STORAGE_SIZE - 1;
+	if (!file.is_open()) {
+		std::cerr << "파일 생성에 실패했습니다!" << std::endl;
+		return false;
+	}
+	file.seekp((LINE_LENGTH + 1) * startAddress, std::ios::beg);
+	for (int i = startAddress; i <= endAddress; i++) {
+		storage[i] = 0;
+		file << std::dec << i << " 0x00000000";
+		getline(file, line);
+	}
+
+	return true;
+}
+
 bool SSD::isAddressValid(int idx) {
-	if (idx >= 0 && idx < 100)
+	if (idx >= 0 && idx < STORAGE_SIZE)
 	{
 		return true;
 	}
@@ -101,4 +131,12 @@ bool SSD::isAddressValid(int idx) {
 	outfile.close();
 
 	return false;
+}
+
+unsigned int SSD::get(int idx) {
+	return storage[idx];
+}
+
+void SSD::set(int idx, unsigned int value) {
+	storage[idx] = value;
 }

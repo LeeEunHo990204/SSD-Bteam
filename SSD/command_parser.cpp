@@ -1,4 +1,4 @@
-﻿#include "command_parser.h"
+#include "command_parser.h"
 
 
 CommandParser::CommandParser(int argc, char* argv[]) {
@@ -6,14 +6,18 @@ CommandParser::CommandParser(int argc, char* argv[]) {
 }
 
 bool CommandParser::parse(int argc, char* argv[]) {
-    if (argc < 3) {
+    if (argc < 2) {
         std::cout << "Usage:" << std::endl;
         std::cout << "  ssd.exe R [address]" << std::endl;
         std::cout << "  ssd.exe W [address] [data(hex)]" << std::endl;
+        std::cout << "  ssd.exe E [address] [size(dec)]" << std::endl;
+        std::cout << "  ssd.exe F" << std::endl;
         return false;
     }
-    command = argv[1];
-    address = std::stoi(argv[2]);
+    commandInfo.command = argv[1];
+    if (2 < argc) {
+        commandInfo.address = std::stoi(argv[2]);
+    }
 
     if (argc == 4)
     {
@@ -22,13 +26,17 @@ bool CommandParser::parse(int argc, char* argv[]) {
             std::cout << "Out of 4-byte range!" << std::endl;
             return false;
         }
-        data = std::stoul(argv[3], nullptr, 16);
+
+        if (commandInfo.command == "W") {
+            commandInfo.data = std::stoul(argv[3], nullptr, 16);
+        }
+        else{
+            commandInfo.data = std::stoul(argv[3], nullptr, 10);
+        }
     }
     return true;
        
 }
 
 bool CommandParser::isValid() const { return valid; }
-std::string CommandParser::getCommand() const { return command; }
-unsigned int CommandParser::getLBA() const { return address; }
-unsigned int CommandParser::getData() const { return data; }
+CommandInfo CommandParser::getCommandInfo() const{ return commandInfo; }

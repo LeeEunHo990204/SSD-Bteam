@@ -33,7 +33,6 @@ public:
 	}
 
 	int readCompare(int lba, int data) {
-		getShellDev()->write(lba, data);
 
 		if (data != std::stoul(getShellDev()->read(lba), nullptr, 16)) {
 			testResult = TEST_FAIL;
@@ -43,7 +42,7 @@ public:
 			return READ_COMPARE_DATA_MATCH; //OK: data match
 		}
 	}
-	
+
 	virtual void runTestScenario() = 0;
 
 	int getResult() { return testResult; }
@@ -84,6 +83,16 @@ public:
 	TestScripts3() : ITestScripts("TestScript3") {}
 	TestScripts3(std::string name) : ITestScripts(name) {}
 	TestScripts3(std::string name, ICmdLauncher* cmdLauncher) : ITestScripts(name, cmdLauncher) {}
+
+	void runTestScenario() override;
+};
+
+class TestScripts4 : public ITestScripts
+{
+public:
+	TestScripts4() : ITestScripts("TestScript4") {}
+	TestScripts4(std::string name) : ITestScripts(name) {}
+	TestScripts4(std::string name, ICmdLauncher* cmdLauncher) : ITestScripts(name, cmdLauncher) {}
 
 	void runTestScenario() override;
 };

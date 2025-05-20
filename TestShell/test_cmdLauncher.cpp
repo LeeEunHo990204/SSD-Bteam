@@ -19,6 +19,13 @@ public:
             return "ERROR";
         return array[LBA];
     }
+    bool erase(int LBA, int size) override {
+        if (LBA < 0 || LBA > MAX_LBA || size < 0 || size > 10) return false;
+        for (int i = LBA; i < LBA + size; i++) {
+            array[i] = to_string(0);
+        }
+        return true;
+    }
 private:
     std::string array[100] = { "", };
 };
@@ -74,4 +81,12 @@ TEST_F(UtFixture, RWTestOutOfLBA) {
     EXPECT_EQ("ERROR", cmdLauncher.read(100));
     cmdLauncher.write(MAX_LBA + 1, 0x12345678);
     EXPECT_EQ("ERROR", cmdLauncher.read(MAX_LBA + 1));
+}
+
+TEST_F(UtFixture, EraseTestPass) {
+    EXPECT_TRUE(cmdLauncher.erase(1, 5));
+}
+
+TEST_F(UtFixture, EraseTestFail) {
+    EXPECT_FALSE(cmdLauncher.erase(-1, 5));
 }
