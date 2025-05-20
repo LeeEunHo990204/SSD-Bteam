@@ -12,7 +12,7 @@ class LoggerFixture : public ::testing::Test
 {
 public:
 	Logger* logger;
-	MockLauncher mockLauncher;
+	MockLauncher* mockLauncher;
 };
 
 TEST_F(LoggerFixture, DISABLED_TestPrintLog)
