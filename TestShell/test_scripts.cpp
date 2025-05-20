@@ -5,6 +5,7 @@ class MockLauncher : public ICmdLauncher {
 public:
 	MOCK_METHOD(void, write, (int LBA, unsigned int val), (override));
 	MOCK_METHOD(unsigned int, read, (int LBA), (override));
+	MOCK_METHOD(bool, erase, (int LBA, int size), (override));
 };
 
 class TestScriptsFixture : public ::testing::Test

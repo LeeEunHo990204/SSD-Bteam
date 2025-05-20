@@ -12,6 +12,13 @@ public:
 	unsigned int read(int LBA) override {
 		return array[LBA];
 	}
+	bool erase(int LBA, int size) override {
+		if (LBA < 0 || LBA > 100) return false;
+		for (int i = LBA; i < LBA + size; i++) {
+			array[i] = 0;
+		}
+		return true;
+	}
 private:
 	unsigned int array[100] = { 0, };
 };
@@ -56,6 +63,11 @@ TEST_F(ShellFixture, write) {
 TEST_F(ShellFixture, read) {
 	std::string actual = shell->runCommand("READ 1");
 	EXPECT_EQ("[Read] LBA 1 : 0", actual);
+}
+
+TEST_F(ShellFixture, erase) {
+	std::string actual = shell->runCommand("ERASE 1 5");
+	EXPECT_EQ("[Erase] Done", actual);
 }
 
 TEST_F(ShellFixture, testscripts1) {
