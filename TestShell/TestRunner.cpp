@@ -3,8 +3,6 @@
 #include "TestScripts.h"
 #include "Runner.h"
 
-
-
 class TestRunnerFixture : public ::testing::Test
 {
 public:

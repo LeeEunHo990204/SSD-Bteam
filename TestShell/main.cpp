@@ -14,18 +14,17 @@ int main(int argc, char** argv) {
 	InitGoogleMock();
 	return RUN_ALL_TESTS();
 #else
-	if (argc == 1) {
-		Shell* shell = new Shell(new SSDCmdLauncher, new TestScripts1());
-		shell->run();
-	}
-	else if (argc == 2) {
-		//TODO: Implementation of runner
-		std::cout << "Runner execution" << std::endl;
-		std::string filePath(argvp)
-		Runner* runner = new Runner();
+	if (argc == 2) {
+		std::string filePath(argv[1]);
+		Runner* runner = new Runner(filePath);
+		if (runner->parseInputScripts() != 0) {
+			std::cout << "Failed to get script file" << std::endl;
+		}
+		runner->runScripts();
 	}
 	else {
-		//TODO: print help, useage message
+		Shell* shell = new Shell(new SSDCmdLauncher, new TestScripts1());
+		shell->run();
 	}
 	return 0;
 #endif

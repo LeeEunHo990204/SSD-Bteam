@@ -69,6 +69,8 @@ int Runner::runScripts() {
 	int ret = 0;
 
 	for (auto scriptPtr : this->getTestScripts()) {
+
+		std::cout << "Run TestSCripts: " << scriptPtr->getName() << std::endl;
 		scriptPtr->runTestScenario();
 		if (scriptPtr->getResult() == 0) {
 			//script pass
