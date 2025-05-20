@@ -401,3 +401,5 @@ FodyWeavers.xsd
 *.sln.iml
 SSD/ssd_nand.txt
 SSD/ssd_output.txt
+TestShell/ssd_nand.txt
+TestShell/ssd_output.txt
