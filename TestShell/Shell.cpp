@@ -5,7 +5,7 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
-#include "cmd_launcher.cpp"
+#include "CmdLancher.h"
 #include "TestScripts.h"
 
 class Validation {

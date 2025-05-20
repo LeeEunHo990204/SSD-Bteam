@@ -2,7 +2,7 @@
 #include <iostream>
 #include <random>
 #include <cstdint>
-#include "cmd_launcher.cpp"
+#include "CmdLancher.h"
 
 #define READ_COMPARE_DATA_MISMATCH (-1)
 #define READ_COMPARE_DATA_MATCH (0)

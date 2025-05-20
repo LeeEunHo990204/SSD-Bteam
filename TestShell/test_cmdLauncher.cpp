@@ -1,6 +1,6 @@
 #include "test.h"
 #include "gmock/gmock.h"
-#include "cmd_launcher.cpp"
+#include "CmdLancher.h"
 
 using namespace testing;
 using namespace std;
