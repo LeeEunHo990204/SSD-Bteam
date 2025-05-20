@@ -24,16 +24,10 @@
     <ClCompile Include="test_cmdLauncher.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
-    <ClCompile Include="cmd_launcher.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="test_scripts.cpp">
       <Filter>테스트 파일</Filter>
     </ClCompile>
     <ClCompile Include="TestScripts.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Shell.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="test_shell.cpp">
