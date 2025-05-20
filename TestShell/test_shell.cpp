@@ -1,5 +1,5 @@
 #include "gmock/gmock.h"
-#include "Shell.cpp"
+#include "Shell.h"
 using namespace testing;
 
 class MockCmdLauncher : public ICmdLauncher {
@@ -9,8 +9,10 @@ public:
 	void write(int LBA, unsigned int val) override {
 		array[LBA] = val;
 	}
-	unsigned int read(int LBA) override {
-		return array[LBA];
+	std::string read(int LBA) override {
+		std::stringstream ss;
+		ss << std::hex << std::uppercase << array[LBA];
+		return ss.str();
 	}
 private:
 	unsigned int array[100] = { 0, };
