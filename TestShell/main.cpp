@@ -19,6 +19,7 @@ int main(int argc, char** argv) {
 		Runner* runner = new Runner(filePath);
 		if (runner->parseInputScripts() != 0) {
 			std::cout << "Failed to get script file" << std::endl;
+			return 0;
 		}
 		runner->runScripts();
 	}
