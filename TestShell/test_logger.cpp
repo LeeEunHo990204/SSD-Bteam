@@ -18,5 +18,7 @@ public:
 TEST_F(LoggerFixture, TestPrintLog)
 {
 	logger = new Logger();
-	logger->print("test", "test");
+	for (int i = 0; i < 1000; i++) {
+		logger->print("test" + to_string(i), "test");
+	}
 }
