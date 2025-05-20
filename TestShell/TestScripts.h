@@ -2,7 +2,7 @@
 #include <iostream>
 #include <random>
 #include <cstdint>
-#include "cmd_launcher.cpp"
+#include "CmdLancher.h"
 
 #define READ_COMPARE_DATA_MISMATCH (-1)
 #define READ_COMPARE_DATA_MATCH (0)
@@ -23,7 +23,7 @@ public:
 	int writeAndReadCompare(int lba, unsigned int data) {
 		getShellDev()->write(lba, data);
 
-		if (data != getShellDev()->read(lba)) {
+		if (data != std::stoul(getShellDev()->read(lba), nullptr, 16)) {
 			testResult = TEST_FAIL;
 			return READ_COMPARE_DATA_MISMATCH; //ERROR: data mismatch
 		}
@@ -35,7 +35,7 @@ public:
 	int readCompare(int lba, int data) {
 		getShellDev()->write(lba, data);
 
-		if (data != getShellDev()->read(lba)) {
+		if (data != std::stoul(getShellDev()->read(lba), nullptr, 16)) {
 			testResult = TEST_FAIL;
 			return READ_COMPARE_DATA_MISMATCH; //ERROR: data mismatch
 		}

@@ -4,7 +4,7 @@
 class MockLauncher : public ICmdLauncher {
 public:
 	MOCK_METHOD(void, write, (int LBA, unsigned int val), (override));
-	MOCK_METHOD(unsigned int, read, (int LBA), (override));
+	MOCK_METHOD(string, read, (int LBA), (override));
 };
 
 class TestScriptsFixture : public ::testing::Test
@@ -23,18 +23,18 @@ public:
 		}
 		else if (tsName == TS2_NAME) {
 			testScripts = new TestScripts2(tsName, launcher);
-		} 
+		}
 		else if (tsName == TS3_NAME) {
 			testScripts = new TestScripts3(tsName, launcher);
 		}
-		else if (tsName == BASIC_NAME){
+		else if (tsName == BASIC_NAME) {
 			testScripts = new TestScripts1(tsName, launcher);
 		}
 		else {
 			testScripts = nullptr;
 		}
 	}
-	
+
 	void deleteTS() {
 		if (testScripts != nullptr)
 			delete testScripts;
@@ -134,9 +134,9 @@ TEST_F(TestScriptsFixture, TestMockBasicReadTest)
 	factoryCreateTSWithLauncher(BASIC_NAME, &mockLauncher);
 	EXPECT_CALL(mockLauncher, read(::testing::_))
 		.Times(1)
-		.WillOnce(testing::Return(0x00000000));
+		.WillOnce(testing::Return("0x00000000"));
 	//Act
-	unsigned int readVal = testScripts->getShellDev()->read(0x00);
+	unsigned int readVal = std::stoul(testScripts->getShellDev()->read(0x00), nullptr, 16);
 	//Assert
 	EXPECT_EQ(readVal, 0x00000000);
 	deleteTS();
@@ -157,12 +157,15 @@ TEST_F(TestScriptsFixture, TestReadCompareDataMatch)
 {
 	//Arrange
 	factoryCreateTSWithLauncher(BASIC_NAME, &mockLauncher);
+	std::stringstream ss;
+	ss << std::hex << std::uppercase << RAND_NUM;
+
 	EXPECT_CALL(mockLauncher, write(RAND_LBA, RAND_NUM))
 		.Times(1);
 	EXPECT_CALL(mockLauncher, read(RAND_LBA))
 		.Times(1)
-		.WillOnce(testing::Return(RAND_NUM));
-	
+		.WillOnce(testing::Return(ss.str()));
+
 	//Act
 	int readCompareResult = testScripts->readCompare(RAND_LBA, RAND_NUM);
 
@@ -179,7 +182,7 @@ TEST_F(TestScriptsFixture, TestReadCompareDataMisMatch)
 		.Times(1);
 	EXPECT_CALL(mockLauncher, read(RAND_LBA))
 		.Times(1)
-		.WillOnce(testing::Return(0xFFFFFFFF));
+		.WillOnce(testing::Return("0xFFFFFFFF"));
 
 	//Act
 	int readCompareResult = testScripts->readCompare(RAND_LBA, RAND_NUM);
@@ -199,7 +202,11 @@ TEST_F(TestScriptsFixture, TestScript1)
 		.Times(100);
 	EXPECT_CALL(mockLauncher, read(::testing::_))
 		.Times(100)
-		.WillRepeatedly(testing::Invoke([&counter](int) { return counter++; }));
+		.WillRepeatedly(testing::Invoke([&counter](int) {
+			std::stringstream ss;
+			ss << std::hex << std::uppercase << counter++;
+			return ss.str();
+		}));
 
 	//Act
 	testScripts->runTestScenario();
@@ -213,7 +220,7 @@ TEST_F(TestScriptsFixture, TestScript2)
 {
 	int pattern[] = { 0x400, 0x000, 0x300, 0x100, 0x200 };
 	int call_count = 0;
-	
+
 	//Arrange
 	factoryCreateTSWithLauncher(TS2_NAME, &mockLauncher);
 
@@ -222,10 +229,13 @@ TEST_F(TestScriptsFixture, TestScript2)
 	EXPECT_CALL(mockLauncher, read(::testing::_))
 		.Times(150)
 		.WillRepeatedly(testing::Invoke([&call_count, &pattern](int) {
-		int ret = pattern[call_count % 5];
-		++call_count;
-		return ret;
-			}));
+			int ret = pattern[call_count % 5];
+			++call_count;
+
+			std::stringstream ss;
+			ss << std::hex << std::uppercase << ret;  // 대문자 16진수 ("1A" 등)
+			return ss.str();
+		}));
 
 	//Act
 	testScripts->runTestScenario();
