@@ -65,5 +65,19 @@ int Runner::parseInputScripts() {
 }
 
 int Runner::runScripts() {
-	return 4;
+
+	int ret = 0;
+
+	for (auto scriptPtr : this->getTestScripts()) {
+		scriptPtr->runTestScenario();
+		if (scriptPtr->getResult() == 0) {
+			//script pass
+		}
+		else {
+			//script fail
+			break;
+		}
+	}
+
+	return ret;
 }

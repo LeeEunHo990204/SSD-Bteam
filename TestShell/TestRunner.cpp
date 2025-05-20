@@ -72,3 +72,20 @@ TEST_F(TestRunnerFixture, TestParsingDefaultScripts) {
 	//EXPECT_EQ(4, runner->getTestScripts().size());
 	deleteRunner();
 }
+
+TEST_F(TestRunnerFixture, TestDefaultScripts) {
+	//Arrange
+	runner = new Runner(DEFAULT_SCRIPTS_PATH);
+
+	//Act
+	int result = runner->parseInputScripts();
+	if (result != 0) {
+		//parsing error;
+	}
+	result = runner->runScripts();
+
+	//Assert
+	EXPECT_EQ(result, 0);
+	
+	deleteRunner();
+}

@@ -21,6 +21,7 @@ int main(int argc, char** argv) {
 	else if (argc == 2) {
 		//TODO: Implementation of runner
 		std::cout << "Runner execution" << std::endl;
+		std::string filePath(argvp)
 		Runner* runner = new Runner();
 	}
 	else {
