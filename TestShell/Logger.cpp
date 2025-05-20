@@ -53,13 +53,28 @@ private:
         return mFile.tellp();
     }
 
+    std::tm getTime() {
+        std::time_t now = std::time(nullptr);
+        std::tm local_tm;
+        localtime_s(&local_tm, &now);
+
+        return local_tm;
+    }
+
 	std::string getTimeString() {
-		std::time_t now = std::time(nullptr);
-		std::tm local_tm;
-		localtime_s(&local_tm, &now);
+        std::tm local_tm = getTime();
 
 		std::ostringstream oss;
 		oss << std::string("[") << std::put_time(&local_tm, "%y.%m.%d %H:%M") << "]";
 		return oss.str();
 	}
+
+    std::string getTimeString4FileName() {
+        std::tm local_tm = getTime();
+        
+        std::ostringstream oss;
+        cout << "!!";
+        oss << "until_" << std::put_time(&local_tm, "%y%m%d_%Hh_%Mm_%Ss") << ".log";
+        return oss.str();
+    }
 };
