@@ -28,13 +28,17 @@ public:
 	}
 
     void saveLog() {
-        //for (int i = 0; i < (1024 * 3); i++) {
-        //    mDataBuffer << "1";
-        //}
-        //mFile << mDataBuffer.str();
-        //cout << endl << "#############" << endl << mLogName << ":" << file_size << endl << "#############" << endl;
-        rename((mLogPath + mLogName).c_str(), (mLogPath + to_string(LogFileCnt) + ".log").c_str());
+        string logFileName;
+        logFileName = getTimeString4FileName();
+        if (mNewLogName.size() != 0) {
+            if (mNewLogName != logFileName) //not same time stamp
+                rename((mLogPath + mNewLogName + ".log").c_str(), (mLogPath + mNewLogName + ".zip").c_str());
+            else
+                rename((mLogPath + mNewLogName + ".log").c_str(), (mLogPath + mNewLogName + "_" + "sametime" + "_" + to_string(LogFileCnt) + ".zip").c_str());
+        }
+        rename((mLogPath + mLogName).c_str(), (mLogPath + logFileName + ".log").c_str());
         LogFileCnt++;
+        mNewLogName = logFileName;
     }
 
 private:
@@ -43,7 +47,7 @@ private:
     ofstream mFile;
     const string mLogPath = "../Log/";
     const string mLogName = "latest.log";
-    string mNewLogName = "timecode_TODO.log";
+    string mNewLogName = "";
     
     // For Test
     int LogFileCnt = 1;
@@ -74,7 +78,7 @@ private:
 
         std::ostringstream oss;
         cout << "!!";
-        oss << "until_" << std::put_time(&local_tm, "%y%m%d_%Hh_%Mm_%Ss") << ".log";
+        oss << "until_" << std::put_time(&local_tm, "%y%m%d_%Hh_%Mm_%Ss");
         return oss.str();
     }
 };
