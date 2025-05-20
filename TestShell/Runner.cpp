@@ -70,15 +70,18 @@ int Runner::runScripts() {
 
 	for (auto scriptPtr : this->getTestScripts()) {
 
-		std::cout << "Run TestSCripts: " << scriptPtr->getName() << std::endl;
+		std::cout << std::left << std::setw(40) << scriptPtr->getName() << " ___ Run...";
 		scriptPtr->runTestScenario();
 		if (scriptPtr->getResult() == 0) {
 			//script pass
+			std::cout << "Pass";
 		}
 		else {
 			//script fail
+			std::cout << "Fail!" << std::endl;
 			break;
 		}
+		std::cout << std::endl;
 	}
 
 	return ret;
