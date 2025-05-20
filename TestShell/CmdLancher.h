@@ -61,6 +61,7 @@ public:
         cout << command.str() << endl;
 
         system(command.str().c_str());
+        return true;
     }
 private:
     const string filename = "ssd_nand.txt";
@@ -75,6 +76,9 @@ public:
     }
     string read(int LBA) {
         return m_cmdLauncher->read(LBA);
+    }
+    bool erase(int LBA, int size) {
+        return m_cmdLauncher->erase(LBA, size);
     }
 protected:
     ICmdLauncher* m_cmdLauncher;
