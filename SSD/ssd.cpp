@@ -19,10 +19,7 @@ void SSD::init(void) {
 		}
 
 		for (int i = 0; i < STORAGE_SIZE; i++) {
-			outfile << setw(LINE_LENGTH - 1) << std::left << to_string(i) + " 0x00000000";
-			if (i < STORAGE_SIZE -1) {
-				outfile << "\n";
-			}
+			outfile << setw(LINE_LENGTH - 1) << std::left << to_string(i) + " 0x00000000" << "\n";
 		}
 
 		outfile.close();
@@ -59,7 +56,7 @@ void SSD::init(void) {
 	}
 }
 
-void SSD::write(int idx, int value) {
+void SSD::write(int idx, unsigned int value) {
 	if (!isAddressValid(idx)) {
 		std::cerr << "유효하지 않은 주소입니다!" << std::endl;
 		return;
@@ -99,7 +96,6 @@ bool SSD::erase(int idx, int size) {
 		std::cerr << "유효하지 않은 주소입니다!" << std::endl;
 		return false;
 	}
-
 	if (size < 0 || size > 10) {
 		cout << "size is wrong" << endl;
 		return isAddressValid(-1);
@@ -135,4 +131,12 @@ bool SSD::isAddressValid(int idx) {
 	outfile.close();
 
 	return false;
+}
+
+unsigned int SSD::get(int idx) {
+	return storage[idx];
+}
+
+void SSD::set(int idx, unsigned int value) {
+	storage[idx] = value;
 }

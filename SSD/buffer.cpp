@@ -67,7 +67,7 @@ void Buffer::convertTxtToCmd(void) {
 			return;
 		}
 
-		cmdBuffer.push_back({ parts[1], stoi(parts[2]), stoi(parts[3]) });
+		cmdBuffer.push_back({ parts[1], stoi(parts[2]), (unsigned int)stoi(parts[3]) });
 	}
 }
 
@@ -88,11 +88,6 @@ void Buffer::initBuffer(void) {
 			cerr << filePath << " 생성 실패!" << endl;
 		}
 	}
-	cout << "폴더 및 파일 생성 완료!" << endl;
-}
-
-void Buffer::updateBuffer(void) {
-
 }
 
 void Buffer::readBufferDir(void) {
@@ -119,6 +114,22 @@ void Buffer::readBufferDir(void) {
 	sort(txtBuffer.begin(), txtBuffer.end());
 }
 
+void Buffer::updateStorage(void) {
+	for (int i = 0; i < 5; i++) {
+		if (cmdBuffer[i].cmd == "W") {
+			ssd.set(cmdBuffer[i].LBA, cmdBuffer[i].value);
+		}
+		else if (cmdBuffer[i].cmd == "E") {
+			for (unsigned int j = cmdBuffer[i].LBA; j < cmdBuffer[i].LBA + cmdBuffer[i].value; j++) {
+				ssd.set(j, 0);
+			}
+		}
+		else {
+			break;
+		}
+	}
+}
+
 void Buffer::readBuffer(void) {
 	if (!isBufferDir()) {
 		initBuffer();
@@ -126,6 +137,7 @@ void Buffer::readBuffer(void) {
 	txtBuffer.clear();
 	readBufferDir();
 	convertTxtToCmd();
+	updateStorage();
 }
 
 void Buffer::writeBuffer(void) {
@@ -146,11 +158,61 @@ void Buffer::writeBuffer(void) {
 		std::string filePath = "buffer\\" + name;
 		std::ofstream outfile(filePath);
 		if (!outfile.is_open()) {
+#if _DEBUG
 			std::cerr << "Create File Failed: " << filePath << std::endl;
+#endif
 		}
 		else {
+#if _DEBUG
 			std::cout << "Create File Success: " << filePath << std::endl;
+#endif
 			outfile.close();
 		}
 	}
+}
+
+void Buffer::resetBuffer(void) {
+	txtBuffer.clear();
+	txtBuffer.push_back("0_empty.txt.");
+	txtBuffer.push_back("1_empty.txt.");
+	txtBuffer.push_back("2_empty.txt.");
+	txtBuffer.push_back("3_empty.txt.");
+	txtBuffer.push_back("4_empty.txt.");
+	convertTxtToCmd();
+}
+
+void Buffer::flushBuffer(void) {
+	for (int i = 0;i < STORAGE_SIZE;i++) {
+		ssd.write(i, ssd.get(i));
+	}
+	resetBuffer();
+	convertCmdToTxt();
+	writeBuffer();
+}
+
+int Buffer::returnCmdBufferIndex(void) {
+	int i;
+	for (i = 0; i < 5; i++) {
+		if (cmdBuffer[i].cmd == "")
+			break;
+	}
+	return i;
+}
+
+void Buffer::mergeBuffer(void) {
+
+}
+
+void Buffer::updateBuffer(string cmd, int LBA, unsigned int value) {
+	int idx = returnCmdBufferIndex();
+	if (idx == 5) {
+		flushBuffer();
+		idx = 0;
+	}
+
+	cmdBuffer[idx] = { cmd, LBA, value };
+	mergeBuffer();
+	convertCmdToTxt();
+	writeBuffer();
+	updateStorage();
 }
