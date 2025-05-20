@@ -13,20 +13,27 @@
 #include <sstream>
 #include <iomanip>
 
+#include "ssd.h"
+
 using namespace std;
 
 struct CmdBuffer {
 	string cmd;
 	int LBA;
-	int value;
+	unsigned int value;
 };
 
 class Buffer {
 public:
+	Buffer() {
+		readBuffer();
+	}
 	void initBuffer(void);
-	void updateBuffer(void);
+	void updateBuffer(string cmd, int LBA, unsigned int value);
 	void readBuffer(void);
 	void writeBuffer(void);
+	void flushBuffer(void);
+	SSD ssd;
 #if !_DEBUG
 private:
 #endif
@@ -42,6 +49,10 @@ private:
 	void convertTxtToCmd(void);
 	void printCmdBuffer(void);
 	void printTxtBuffer(void);
+	void resetBuffer(void);
+	int returnCmdBufferIndex(void);
+	void mergeBuffer(void);
+	void updateStorage(void);
 
 	string toHexString(unsigned int value) {
 		stringstream ss;

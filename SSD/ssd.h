@@ -17,10 +17,12 @@ class SSD : public IDevice {
 public:
 	SSD();
 	~SSD();
-	void write(int idx, int value);
+	void write(int idx, unsigned int value);
 	bool erase(int idx, int size);
 	unsigned int read(int idx);
 	bool isAddressValid(int idx);
+	unsigned int get(int idx);
+	void set(int idx, unsigned int value);
 private:
 	unsigned int storage[STORAGE_SIZE] = { 0, };
 	const string filename = "ssd_nand.txt";

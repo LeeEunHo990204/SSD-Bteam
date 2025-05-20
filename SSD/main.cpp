@@ -2,6 +2,7 @@
 #include "ssd.h"
 #include "command_parser.h"
 #include "device_controller.h"
+#include "buffer.h"
 
 using namespace testing;
 using namespace std;
@@ -56,12 +57,9 @@ int main(int argc, char* argv[]) {
 #else
 
 	CommandParser commandParser(argc, argv);
-	SSD ssd;
+	Buffer buffer;
 	CommandInfo commandinfo = commandParser.getCommandInfo();
-	DeviceController deviceController(&ssd);
-
-	cout << "[logging] CMD :" << commandinfo.command << endl;
-	cout << "[logging] argc :" << argc << endl;
+	DeviceController deviceController(&buffer.ssd, &buffer);
 	
 	return deviceController.run(commandinfo);
 #endif

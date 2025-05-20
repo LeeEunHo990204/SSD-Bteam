@@ -6,15 +6,18 @@ CommandParser::CommandParser(int argc, char* argv[]) {
 }
 
 bool CommandParser::parse(int argc, char* argv[]) {
-    if (argc < 3) {
+    if (argc < 2) {
         std::cout << "Usage:" << std::endl;
         std::cout << "  ssd.exe R [address]" << std::endl;
         std::cout << "  ssd.exe W [address] [data(hex)]" << std::endl;
         std::cout << "  ssd.exe E [address] [size(dec)]" << std::endl;
+        std::cout << "  ssd.exe F" << std::endl;
         return false;
     }
     commandInfo.command = argv[1];
-    commandInfo.address = std::stoi(argv[2]);
+    if (2 < argc) {
+        commandInfo.address = std::stoi(argv[2]);
+    }
 
     if (argc == 4)
     {

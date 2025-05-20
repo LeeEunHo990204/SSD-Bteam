@@ -1,8 +1,9 @@
 #include "gmock/gmock.h"
-#include "ssd.h"
+#include "buffer.h"
 #include "command_parser.h"
 #include "mock.h"
 #include "device_controller.h"
+#include "buffer.h"
 
 using namespace testing;
 using namespace std;
@@ -12,6 +13,7 @@ using namespace std;
 class SsdTestFixture : public Test {
 public:
 	SSD ssd;
+	Buffer buffer;
 };
 
 TEST(MockTest, write) {
@@ -156,7 +158,7 @@ TEST_F(SsdTestFixture, DeviceControllerValidWriteAndReadTest)
 	CommandParser parser(argv.size(), argv.data());
 	CommandInfo commandInfo = parser.getCommandInfo();
 
-	DeviceController deviceController(&ssd);
+	DeviceController deviceController(&buffer.ssd, &buffer);
 	
 	EXPECT_EQ(deviceController.run(commandInfo), 0);	// run 수행 결과 이상 없음 확인
 

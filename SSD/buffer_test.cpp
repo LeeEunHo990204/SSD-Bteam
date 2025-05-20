@@ -21,7 +21,7 @@ TEST_F(BufferTest, convertCmdToTxt) {
 	buffer.cmdBuffer.push_back({ "W", 60, 0xBABA });
 	buffer.cmdBuffer.push_back({ "", 0, 0 });
 	buffer.cmdBuffer.push_back({ "", 0, 0 });
-	
+
 	buffer.convertCmdToTxt();
 
 	buffer.printTxtBuffer();
