@@ -15,7 +15,8 @@ public:
 	MockLauncher mockLauncher;
 };
 
-TEST_F(LoggerFixture, TestGetTimeString)
+TEST_F(LoggerFixture, TestPrintLog)
 {
 	logger = new Logger();
+	logger->print("test", "test");
 }
