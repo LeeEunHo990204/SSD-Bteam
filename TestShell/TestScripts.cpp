@@ -36,7 +36,6 @@ void TestScripts3::runTestScenario() {
 
 	uint32_t randomVal;
 
-	//TODO: Need to meet requirements
 	for (loopCnt = 0; loopCnt < 200; loopCnt++) {
 		randomVal = getRandomUint32();
 		getShellDev()->write(0, randomVal);
@@ -52,7 +51,6 @@ void TestScripts4::runTestScenario() {
 
 	uint32_t randomVal;
 
-	//TODO: Need to meet requirements
 	for (loopCnt = 0; loopCnt < 30; loopCnt++) {
 
 		for (uint32_t LBA = 2; LBA <= MAX_LBA - 2; LBA = LBA + 2)

@@ -44,8 +44,7 @@ public:
 
 TEST_F(UtFixture, RWTestPass) {
     cmdLauncher.write(3, 0x12345678);
-    cout << cmdLauncher.read(3) << endl;
-    EXPECT_EQ(to_string(0x12345678), cmdLauncher.read(3));
+    EXPECT_EQ("0x12345678", cmdLauncher.read(3));
 }
 
 TEST_F(UtFixture, RWTestSequencePass) {
@@ -57,15 +56,14 @@ TEST_F(UtFixture, RWTestSequencePass) {
     cmdLauncher.write(92, 0xDEADBEEF);
     cmdLauncher.write(93, 0x99999999);
     cmdLauncher.write(94, 0xABCD4321);
-    EXPECT_EQ(to_string(0x12345678), cmdLauncher.read(1));
-    EXPECT_EQ(to_string(0xDEADBEEF), cmdLauncher.read(2));
-    EXPECT_EQ(to_string(0x99999999), cmdLauncher.read(3));
-    EXPECT_EQ(to_string(0xABCD4321), cmdLauncher.read(4));
-
-    EXPECT_EQ(to_string(0x12345678), cmdLauncher.read(91));
-    EXPECT_EQ(to_string(0xDEADBEEF), cmdLauncher.read(92));
-    EXPECT_EQ(to_string(0x99999999), cmdLauncher.read(93));
-    EXPECT_EQ(to_string(0xABCD4321), cmdLauncher.read(94));
+    EXPECT_EQ("0x12345678", cmdLauncher.read(1));
+    EXPECT_EQ("0xDEADBEEF", cmdLauncher.read(2));
+    EXPECT_EQ("0x99999999", cmdLauncher.read(3));
+    EXPECT_EQ("0xABCD4321", cmdLauncher.read(4));
+    EXPECT_EQ("0x12345678", cmdLauncher.read(91));
+    EXPECT_EQ("0xDEADBEEF", cmdLauncher.read(92));
+    EXPECT_EQ("0x99999999", cmdLauncher.read(93));
+    EXPECT_EQ("0xABCD4321", cmdLauncher.read(94));
 }
 
 TEST_F(UtFixture, RWTestAllRangePass) {
@@ -73,7 +71,7 @@ TEST_F(UtFixture, RWTestAllRangePass) {
         cmdLauncher.write(i, 0x12345678);
     }
     for (int i = 0; i < 100; i++) {
-        EXPECT_EQ(to_string(0x12345678), cmdLauncher.read(i));
+        EXPECT_EQ("0x12345678", cmdLauncher.read(i));
     }
 }
 
