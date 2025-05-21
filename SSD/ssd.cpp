@@ -60,11 +60,10 @@ void SSD::write(int idx, unsigned int value) {
 		std::cerr << "유효하지 않은 주소입니다!" << std::endl;
 		return;
 	}
-	storage[idx] = value;
 	if (!file.is_open()) {
-		std::cerr << "파일 생성에 실패했습니다!" << std::endl;
-		return;
+		init();
 	}
+	storage[idx] = value;
 
 	file.seekp((LINE_LENGTH + 1) * idx, std::ios::beg);
 	file << std::string(LINE_LENGTH - 1, ' ');

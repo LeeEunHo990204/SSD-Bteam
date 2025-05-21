@@ -1,3 +1,5 @@
+#if _DEBUG
+
 #include "gmock/gmock.h"
 #include "buffer.h"
 #include "command_parser.h"
@@ -7,8 +9,6 @@
 
 using namespace testing;
 using namespace std;
-
-
 
 class SsdTestFixture : public Test {
 private:
@@ -178,3 +178,5 @@ TEST_F(SsdTestFixture, DeviceControllerValidWriteAndReadTest)
 
 	EXPECT_EQ(deviceController.run(commandInfo), 0);	// run 수행 결과 이상 없음 확인
 }
+
+#endif
