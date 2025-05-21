@@ -7,29 +7,32 @@ SSD::~SSD() {
 	file.close();
 }
 
-void SSD::init(void) {
-	file.open(filename, std::ios::in | std::ios::out);
+SSD& SSD::getInstance(void) {
+	static SSD instance;
+	return instance;
+}
 
-	if (!file.is_open()) {
-		ofstream outfile(filename);
-		if (!outfile.is_open()) {
-			std::cerr << "파일 생성에 실패했습니다!" << std::endl;
-			return;
-		}
-
-		for (int i = 0; i < STORAGE_SIZE; i++) {
-			outfile << setw(LINE_LENGTH - 1) << std::left << to_string(i) + " 0x00000000" << "\n";
-		}
-
-		outfile.close();
-
-		file.open(filename);
-		if (!file.is_open()) {
-			cerr << "생성 후 파일 열기에 실패했습니다!" << endl;
-			return;
-		}
+void SSD::createNandTxtFile(void) {
+	ofstream outfile(nandFilename);
+	if (!outfile.is_open()) {
+		std::cerr << "파일 생성에 실패했습니다!" << std::endl;
+		return;
 	}
 
+	for (int i = 0; i < STORAGE_SIZE; i++) {
+		outfile << setw(LINE_LENGTH - 1) << std::left << to_string(i) + " 0x00000000" << "\n";
+	}
+
+	outfile.close();
+
+	file.open(nandFilename);
+	if (!file.is_open()) {
+		cerr << "생성 후 파일 열기에 실패했습니다!" << endl;
+		return;
+	}
+}
+
+void SSD::updateStorageFromNandTxtFile(void) {
 	string line;
 
 	for (int i = 0; i < STORAGE_SIZE; i++) {
@@ -37,12 +40,11 @@ void SSD::init(void) {
 		std::istringstream iss(line);
 		std::string index_part, hex_part;
 
-		iss >> index_part >> hex_part; // [3] 와 0x12345678 분리
+		iss >> index_part >> hex_part;
 
-		if (!hex_part.empty() && hex_part.rfind("0x", 0) == 0) {  // "0x"로 시작하면
+		if (!hex_part.empty() && hex_part.rfind("0x", 0) == 0) {
 			try {
-				unsigned int value = std::stoul(hex_part, nullptr, 16);
-				storage[i] = value;
+				storage[i] = stoul(hex_part, nullptr, 16);
 			}
 			catch (const std::exception& e) {
 				std::cerr << "변환 오류: '" << hex_part << "' → 0으로 대체됨" << std::endl;
@@ -53,6 +55,16 @@ void SSD::init(void) {
 			storage[i] = 0;
 		}
 	}
+}
+
+void SSD::init(void) {
+	file.open(nandFilename, std::ios::in | std::ios::out);
+
+	if (!file.is_open()) {
+		createNandTxtFile();
+	}
+
+	updateStorageFromNandTxtFile();
 }
 
 void SSD::write(int idx, unsigned int value) {
@@ -77,7 +89,7 @@ unsigned int SSD::read(int idx) {
 		std::cerr << "유효하지 않은 주소입니다!" << std::endl;
 		return 0;
 	}
-	ofstream outfile("ssd_output.txt");
+	ofstream outfile(outputFilename);
 	if (!outfile.is_open()) {
 		std::cerr << "파일 생성에 실패했습니다!" << std::endl;
 		return 0;
@@ -86,6 +98,21 @@ unsigned int SSD::read(int idx) {
 	outfile << "0x" << std::uppercase << hex << std::setw(8) << std::setfill('0') << storage[idx] << endl;
 	outfile.close();
 	return storage[idx];
+}
+
+bool SSD::eraseInNandTxtFile(int idx, int size) {
+	int startAddress = idx;
+	int endAddress = (idx + size - 1 < STORAGE_SIZE) ? idx + size - 1 : STORAGE_SIZE - 1;
+	if (!file.is_open()) {
+		std::cerr << "파일 생성에 실패했습니다!" << std::endl;
+		return false;
+	}
+	file.seekp((LINE_LENGTH + 1) * startAddress, std::ios::beg);
+	for (int i = startAddress; i <= endAddress; i++) {
+		storage[i] = 0;
+		file << std::dec << i << " 0x00000000";
+	}
+	return true;
 }
 
 bool SSD::erase(int idx, int size) {
@@ -97,21 +124,8 @@ bool SSD::erase(int idx, int size) {
 		cout << "size is wrong" << endl;
 		return isAddressValid(-1);
 	}
-	string line;
-	int startAddress = idx;
-	int endAddress = (idx + size - 1 < STORAGE_SIZE) ? idx + size - 1 : STORAGE_SIZE - 1;
-	if (!file.is_open()) {
-		std::cerr << "파일 생성에 실패했습니다!" << std::endl;
-		return false;
-	}
-	file.seekp((LINE_LENGTH + 1) * startAddress, std::ios::beg);
-	for (int i = startAddress; i <= endAddress; i++) {
-		storage[i] = 0;
-		file << std::dec << i << " 0x00000000";
-		getline(file, line);
-	}
 
-	return true;
+	return eraseInNandTxtFile(idx, size);
 }
 
 bool SSD::isAddressValid(int idx) {
@@ -119,7 +133,7 @@ bool SSD::isAddressValid(int idx) {
 	{
 		return true;
 	}
-	ofstream outfile("ssd_output.txt");
+	ofstream outfile(outputFilename);
 	if (!outfile.is_open()) {
 		std::cerr << "파일 생성에 실패했습니다!" << std::endl;
 		return false;

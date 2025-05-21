@@ -1,8 +1,8 @@
-#include "device_controller.h"
+#include "buffer_controller.h"
 
-DeviceController::DeviceController(IDevice* device, Buffer* buffer) : device_(device), buffer_(buffer) { ; }
+BufferController::BufferController(Buffer* buffer) : buffer_(buffer) { ; }
 
-int DeviceController::run(const CommandInfo& commandInfo) {
+int BufferController::run(const CommandInfo& commandInfo) {
 	if (commandInfo.command == "R") {
 		buffer_->readSSD(commandInfo.address);
 	}
