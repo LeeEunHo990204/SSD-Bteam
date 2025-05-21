@@ -22,10 +22,12 @@ int main(int argc, char** argv) {
 			return 0;
 		}
 		runner->runScripts();
+		delete runner;
 	}
 	else {
 		Shell* shell = new Shell(new SSDCmdLauncher, new TestScripts1());
 		shell->run();
+		delete shell;
 	}
 	return 0;
 #endif

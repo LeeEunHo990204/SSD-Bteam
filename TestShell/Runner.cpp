@@ -27,13 +27,13 @@ int Runner::parseInputScripts() {
 	std::string line;
 
 	if (isFilePathInvalid(this->filePath)) {
-		return -1;
+		return -RUNNER_INVALID_FILE_PATH;
 	}
 
 	this->scriptsFile.open(this->filePath);
 	if (!this->scriptsFile.is_open()) {
 		std::cout << "Failed to open file: " << filePath << endl;
-		return -1;
+		return -RUNNER_SCRIPT_FILE_OPEN_FAILED;
 	}
 
 	while (std::getline(this->scriptsFile, line)) {
@@ -54,7 +54,7 @@ int Runner::parseInputScripts() {
 			this->testScripts.push_back(new TestScripts4(line, &ssdLauncher));
 		} 
 		else {
-			
+			std::cout << "Invalid script name: " << line << std::endl;
 		}
 	}
 	
@@ -72,11 +72,9 @@ int Runner::runScripts() {
 		std::cout << std::left << std::setw(40) << scriptPtr->getName() << " ___ Run...";
 		scriptPtr->runTestScenario();
 		if (scriptPtr->getResult() == 0) {
-			//script pass
 			std::cout << "Pass";
 		}
 		else {
-			//script fail
 			std::cout << "Fail!" << std::endl;
 			break;
 		}
