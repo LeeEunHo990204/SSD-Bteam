@@ -110,6 +110,9 @@ public:
 		if (isOutOf4ByteRange(command->params[1])) {
 			return "Out of 4-byte range!";
 		}
+		if (LBA >= STORAGE_SIZE || LBA < 0) {
+			return "[Write] ERROR";
+		}
 		unsigned int val = stoul(command->params[1], nullptr, 16);
 		cmdLauncher->write(LBA, val);
 		return "[Write] Done";
@@ -290,7 +293,6 @@ public:
 		if (cmdType == "fullread" || cmdType == "FULLREAD") {
 			return std::make_unique<Fullread>();
 		}
-		// 기타 명령 추가
 		return nullptr;
 	}
 };
@@ -326,7 +328,7 @@ public:
 		}
 
 		auto cmd = CmdFactory::create(command->cmd);
-		return cmd->execute(cmdLauncher, command);
+		if (cmd != nullptr) return cmd->execute(cmdLauncher, command);
 
 		if (command->cmd == "1_" || command->cmd == "1_FullWriteAndReadCompare") {
 			setTestScripts(new TestScripts1("1_FullWriteAndReadCompare", cmdLauncher));
