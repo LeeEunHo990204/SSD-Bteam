@@ -25,19 +25,16 @@ struct CmdBuffer {
 
 class Buffer {
 public:
-	Buffer() {
+	Buffer(SSD& ssd) : ssd{ssd} {
 		readBuffer();
 	}
-	void initBuffer(void);
-	void updateBuffer(string cmd, int LBA, unsigned int value);
-	void readBuffer(void);
-	void writeBuffer(void);
-	void flushBuffer(void);
 	unsigned int readSSD(int idx);
-	SSD ssd;
+	void updateBuffer(string cmd, int LBA, unsigned int value);
+	void flushBuffer(void);
 #if !_DEBUG
 private:
 #endif
+	SSD& ssd;
 	vector<string> txtBuffer;
 	vector<CmdBuffer> cmdBuffer;
 	const string dirName = "buffer";
@@ -47,6 +44,9 @@ private:
 	bool isBufferDir(void) {
 		return _access(dirName.c_str(), 0) == 0;
 	}
+	void initBuffer(void);
+	void readBuffer(void);
+	void writeBuffer(void);
 	void readBufferDir(void);
 	void convertCmdToTxt(void);
 	void convertTxtToCmd(void);

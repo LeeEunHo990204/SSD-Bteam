@@ -4,7 +4,7 @@
 #include "buffer.h"
 #include "command_parser.h"
 #include "mock.h"
-#include "device_controller.h"
+#include "buffer_controller.h"
 #include "buffer.h"
 
 using namespace testing;
@@ -13,14 +13,13 @@ using namespace std;
 class SsdTestFixture : public Test {
 private:
 	void SetUp(void) {
-		ssd.init();
 		buffer.ssd.init();
 	}
 	void TearDown(void) {
 	}
 public:
-	SSD ssd;
-	Buffer buffer;
+	SSD& ssd = SSD::getInstance();
+	Buffer buffer{ ssd };
 };
 
 TEST(MockTest, write) {
@@ -165,7 +164,7 @@ TEST_F(SsdTestFixture, DeviceControllerValidWriteAndReadTest)
 	CommandParser parser(argv.size(), argv.data());
 	CommandInfo commandInfo = parser.getCommandInfo();
 
-	DeviceController deviceController(&buffer.ssd, &buffer);
+	BufferController deviceController(&buffer);
 	
 	EXPECT_EQ(deviceController.run(commandInfo), 0);	// run 수행 결과 이상 없음 확인
 

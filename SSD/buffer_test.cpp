@@ -7,7 +7,6 @@ using namespace testing;
 
 class BufferTest : public Test {
 public:
-	Buffer buffer;
     void SetUp() override {
         buffer.initBuffer();
     }
@@ -116,6 +115,8 @@ public:
         }
         // Expected buffer: ERASE(50,5), WRITE(55), ERASE(56,1), WRITE(57)
     };
+	SSD& ssd = SSD::getInstance();
+	Buffer buffer{ ssd };
 };
 
 std::vector<std::vector<CmdBuffer>> resultGroups = {
