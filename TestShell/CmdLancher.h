@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cstdint>
+#include "Logger.h"
 
 using namespace std;
 
@@ -31,13 +32,14 @@ public:
         //cout << LBA << " " << val << endl;
         //cout << LBA << " " << val << " " << command.c_str() << endl;
 
+        LOGGING("Write LBA : " + to_string(LBA) + ", val : " + to_string(val));
         system(command.c_str());
-
     }
     string read(int LBA) override {
         //system("cp)
         string fileName = "SSD.exe";
         string command = fileName + " R " + to_string(LBA);
+        LOGGING("Read LBA : " + to_string(LBA));
         system(command.c_str());
 
         ifstream infile("ssd_output.txt");
@@ -55,6 +57,7 @@ public:
         command << fileName << " E " << LBA << " " << size;
         cout << command.str() << endl;
 
+        LOGGING("Erase LBA : " + to_string(LBA) + ", size : " + to_string(size));
         system(command.str().c_str());
         if ((LBA > MAX_LBA) || (LBA < 0) || size < 0 || size > 10)
             return false;
