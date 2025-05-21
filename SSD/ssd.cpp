@@ -84,7 +84,6 @@ unsigned int SSD::read(int idx) {
 	}
 
 	outfile << "0x" << std::uppercase << hex << std::setw(8) << std::setfill('0') << storage[idx] << endl;
-	cout << "0x" << std::uppercase << hex << std::setw(8) << std::setfill('0') << storage[idx] << endl;
 	outfile.close();
 	return storage[idx];
 }
