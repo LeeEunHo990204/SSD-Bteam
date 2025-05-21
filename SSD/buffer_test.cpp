@@ -16,8 +16,7 @@ public:
     }
 
     void TearDown() override {
-        buffer.resetBuffer();
-        buffer.writeBuffer();
+        buffer.flushBuffer();
     }
 
     std::vector<std::vector<CmdBuffer>> testGroups = {
