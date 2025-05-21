@@ -1,5 +1,5 @@
 #include "gmock/gmock.h"
-#include "Logger.cpp"
+#include "Logger.h"
 #include "CmdLancher.h"
 
 class MockLauncher : public ICmdLauncher {
