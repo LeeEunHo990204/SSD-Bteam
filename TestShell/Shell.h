@@ -112,12 +112,11 @@ public:
 		mHelp.insert(make_pair("fullwrite (or FULLWRITE)", "fullwrite 0xABCDFFFF -> write all LBA with value 0xABCDFFFF"));
 		mHelp.insert(make_pair("fullread (or FULLREAD)", "fullread -> all LBA read"));
 		mHelp.insert(make_pair("1_ (or 1_FullWriteAndReadCompare)", "TestScript1: Full Write then Full Read 100times"));
-		mHelp.insert(make_pair("2_ (or 2_PartialLBAWrite", "Full Write 3times then Full read once"));
+		mHelp.insert(make_pair("2_ (or 2_PartialLBAWrite)", "Full Write 3times then Full read once"));
 		mHelp.insert(make_pair("3_ (or 3_WriteReadAging)", "Write random value on LBA 0 and 99 then ReadCompare for a loop 200 times"));
 		mHelp.insert(make_pair("4_ (or 4_EraseAndWriteAging)", "TestScript4: Write and Overwrite and Erase LBA with it's scenario"));
 		mHelp.insert(make_pair("exit (or EXIT)", "Exit testShell"));
 		mHelp.insert(make_pair("help (or HELP)", "Print team name and members then explain all commands"));
-
 	}
 
 	Shell(ICmdLauncher* cmdLauncher) : cmdLauncher(cmdLauncher) {
@@ -288,7 +287,7 @@ private:
 	unordered_map<string, string>  mHelp;
 
 	void printHelp() {
-		cout << "################ TEAM : Best Reviewer : KDH, KSI, KDG, KDJ, PYH, LYH ################" << endl << endl;
+		cout << "################ TEAM : Best Reviewer : KDH, KSI, KDG, KDJ, PYH, LEH ################" << endl << endl;
 		cout << std::left << std::setw(40) << ">> Command" << " : " << ">> Description" << endl;
 		for (auto it = mHelp.begin(); it != mHelp.end(); it++) {
 			cout << std::left << std::setw(40) << it->first << " : " << it->second << endl;

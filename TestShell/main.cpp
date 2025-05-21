@@ -21,11 +21,11 @@ int main(int argc, char** argv) {
 	InitGoogleMock();
 	return RUN_ALL_TESTS();
 #else
+	if (signal(SIGINT, signalHandlerForProcessExit) == SIG_ERR) {
+		std::cerr << "Failed to register signalHandlerForProcessExit" << std::endl;
+		return 0;
+	}
 	if (argc == 2) {
-		if (signal(SIGINT, signalHandlerForProcessExit) == SIG_ERR) {
-			std::cerr << "Failed to register signalHandlerForProcessExit" << std::endl;
-			return 0;
-		}
 		std::string filePath(argv[1]);
 		Runner* runner = new Runner(filePath);
 		if (runner->parseInputScripts() != 0) {
@@ -35,12 +35,7 @@ int main(int argc, char** argv) {
 		runner->runScripts();
 		delete runner;
 	}
-	else {
-		if (signal(SIGINT, signalHandlerForProcessExit) == SIG_ERR) {
-			std::cerr << "Failed to register signalHandlerForProcessExit" << std::endl;
-			return 0;
-		}
-
+	else { 
 		Shell* shell = new Shell(new SSDCmdLauncher, new TestScripts1());
 		shell->run();
 		delete shell;
