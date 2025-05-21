@@ -7,7 +7,8 @@ using namespace testing;
 
 class BufferTest : public Test {
 public:
-	Buffer buffer;
+	SSD& ssd = SSD::getInstance();
+	Buffer buffer{ ssd };
 };
 
 TEST_F(BufferTest, initBuffer) {

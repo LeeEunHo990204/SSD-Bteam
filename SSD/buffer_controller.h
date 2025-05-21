@@ -3,11 +3,10 @@
 #include "ssd.h"
 #include "buffer.h"
 
-class DeviceController {
+class BufferController {
 public:
-    DeviceController(IDevice* device, Buffer* buffer_);
+    BufferController(Buffer* buffer_);
     int run(const CommandInfo& commandInfo);
 private:
-    IDevice* device_;
     Buffer* buffer_;
 };

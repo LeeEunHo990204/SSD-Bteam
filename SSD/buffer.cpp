@@ -101,7 +101,6 @@ void Buffer::readBufferDir(void) {
 	}
 
 	do {
-		// wstring -> string 변환
 		wstring ws(findFileData.cFileName);
 		wstring_convert<codecvt_utf8<wchar_t>> converter;
 		string filename = converter.to_bytes(ws);
@@ -146,7 +145,6 @@ void Buffer::writeBuffer(void) {
 	WIN32_FIND_DATAA findFileData;
 	HANDLE hFind = FindFirstFileA("buffer\\*.txt", &findFileData);
 
-	// 1. buffer 폴더 안의 .txt 파일 삭제
 	if (hFind != INVALID_HANDLE_VALUE) {
 		do {
 			std::string filePath = "buffer\\" + std::string(findFileData.cFileName);
@@ -155,7 +153,6 @@ void Buffer::writeBuffer(void) {
 		FindClose(hFind);
 	}
 
-	// 2. txtBuffer에 있는 이름으로 파일 생성
 	for (const auto& name : txtBuffer) {
 		std::string filePath = "buffer\\" + name;
 		std::ofstream outfile(filePath);
@@ -244,12 +241,15 @@ void Buffer::mergeBuffer(void) {
 }
 
 void Buffer::updateBuffer(string cmd, int LBA, unsigned int value) {
-	if (LBA < 0 || LBA > 99) {
+	if (!ssd.isAddressValid(LBA)) {
 		return;
 	}
+
 	if (cmd == "E" && value > 10) {
+		ssd.isAddressValid(-1);
 		return;
 	}
+
 	int idx = returnCmdBufferIndex();
 	if (idx == 5) {
 		flushBuffer();

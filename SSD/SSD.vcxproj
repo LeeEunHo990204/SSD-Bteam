@@ -129,8 +129,8 @@
   <ItemGroup>
     <ClCompile Include="buffer.cpp" />
     <ClCompile Include="buffer_test.cpp" />
+    <ClCompile Include="buffer_controller.cpp" />
     <ClCompile Include="command_parser.cpp" />
-    <ClCompile Include="device_controller.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ssd.cpp" />
     <ClCompile Include="ssd_test.cpp" />
@@ -141,8 +141,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="buffer.h" />
+    <ClInclude Include="buffer_controller.h" />
     <ClInclude Include="command_parser.h" />
-    <ClInclude Include="device_controller.h" />
     <ClInclude Include="device.h" />
     <ClInclude Include="mock.h" />
     <ClInclude Include="ssd.h" />
