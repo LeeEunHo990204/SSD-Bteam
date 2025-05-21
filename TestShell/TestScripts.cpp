@@ -1,5 +1,12 @@
 #include "TestScripts.h"
 
+static uint32_t getRandomUint32() {
+	static std::random_device rd;
+	static std::mt19937 gen(rd());
+	static std::uniform_int_distribution<uint32_t> dist(0, 0xFFFFFFFF);
+	return dist(gen);
+}
+
 void TestScripts1::runTestScenario() {
 	for (int i = 0; i < MAX_LBA_NUM; i++) {
 		getShellDev()->write(i, i);
@@ -22,12 +29,6 @@ void TestScripts2::runTestScenario() {
 		getShellDev()->write(2, 0x200);
 		readCompare(2, 0x200);
 	}
-}
-static uint32_t getRandomUint32() {
-	static std::random_device rd;
-	static std::mt19937 gen(rd());
-	static std::uniform_int_distribution<uint32_t> dist(0, 0xFFFFFFFF);
-	return dist(gen);
 }
 
 void TestScripts3::runTestScenario() {
