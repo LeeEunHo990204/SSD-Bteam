@@ -17,6 +17,7 @@ class SSD : public IDevice {
 public:
 	SSD();
 	~SSD();
+	void init(void);
 	void write(int idx, unsigned int value);
 	bool erase(int idx, int size);
 	unsigned int read(int idx);
@@ -28,5 +29,4 @@ private:
 	const string filename = "ssd_nand.txt";
 	fstream file;
 	const int LINE_LENGTH = 20;
-	void init(void);
 };

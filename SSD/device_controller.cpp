@@ -4,7 +4,7 @@ DeviceController::DeviceController(IDevice* device, Buffer* buffer) : device_(de
 
 int DeviceController::run(const CommandInfo& commandInfo) {
 	if (commandInfo.command == "R") {
-		device_->read(commandInfo.address);
+		buffer_->readSSD(commandInfo.address);
 	}
 	else if (commandInfo.command == "W") {
 		buffer_->updateBuffer(commandInfo.command, commandInfo.address, commandInfo.data);

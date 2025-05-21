@@ -114,14 +114,16 @@ void Buffer::readBufferDir(void) {
 	sort(txtBuffer.begin(), txtBuffer.end());
 }
 
-void Buffer::updateStorage(void) {
+void Buffer::updateCache(void) {
 	for (int i = 0; i < 5; i++) {
 		if (cmdBuffer[i].cmd == "W") {
-			ssd.set(cmdBuffer[i].LBA, cmdBuffer[i].value);
+			cache[cmdBuffer[i].LBA] = cmdBuffer[i].value;
+			dirty[cmdBuffer[i].LBA] = 1;
 		}
 		else if (cmdBuffer[i].cmd == "E") {
 			for (unsigned int j = cmdBuffer[i].LBA; j < cmdBuffer[i].LBA + cmdBuffer[i].value; j++) {
-				ssd.set(j, 0);
+				cache[j] = 0;
+				dirty[j] = 1;
 			}
 		}
 		else {
@@ -137,7 +139,7 @@ void Buffer::readBuffer(void) {
 	txtBuffer.clear();
 	readBufferDir();
 	convertTxtToCmd();
-	updateStorage();
+	updateCache();
 }
 
 void Buffer::writeBuffer(void) {
@@ -183,7 +185,11 @@ void Buffer::resetBuffer(void) {
 
 void Buffer::flushBuffer(void) {
 	for (int i = 0;i < STORAGE_SIZE;i++) {
-		ssd.write(i, ssd.get(i));
+		if (dirty[i]) {
+			ssd.write(i, cache[i]);
+			cache[i] = 0;
+			dirty[i] = 0;
+		}
 	}
 	resetBuffer();
 	convertCmdToTxt();
@@ -200,10 +206,50 @@ int Buffer::returnCmdBufferIndex(void) {
 }
 
 void Buffer::mergeBuffer(void) {
+	vector<pair<int, unsigned int>> E;
+	vector<pair<int, unsigned int>> W;
+	int i, j;
+	int idx = 0;
+	for (i = 0; i < STORAGE_SIZE; i++) {
+		if (dirty[i]) {
+			if (cache[i]) {
+				W.push_back({ i, cache[i] });
+				continue;
+			}
 
+			for (j = 1; j < 10 && i + j < STORAGE_SIZE; j++) {
+				if (!dirty[i + j]) {
+					break;
+				}
+				if (cache[i + j]) {
+					W.push_back({ i + j, cache[i + j] });
+					continue;
+				}
+			}
+
+			E.push_back({ i, j });
+			i += j - 1;
+		}
+	}
+	for (auto& e : E) {
+		cmdBuffer[idx++] = { "E", e.first, e.second };
+	}
+	for (auto& w : W) {
+		cmdBuffer[idx++] = { "W", w.first, w.second };
+	}
+
+	for (i = idx; i < 5; i++) {
+		cmdBuffer[i] = { "", 0, 0 };
+	}
 }
 
 void Buffer::updateBuffer(string cmd, int LBA, unsigned int value) {
+	if (LBA < 0 || LBA > 99) {
+		return;
+	}
+	if (cmd == "E" && value > 10) {
+		return;
+	}
 	int idx = returnCmdBufferIndex();
 	if (idx == 5) {
 		flushBuffer();
@@ -211,8 +257,18 @@ void Buffer::updateBuffer(string cmd, int LBA, unsigned int value) {
 	}
 
 	cmdBuffer[idx] = { cmd, LBA, value };
+	updateCache();
 	mergeBuffer();
 	convertCmdToTxt();
 	writeBuffer();
-	updateStorage();
+}
+
+unsigned int Buffer::readSSD(int idx) {
+	if (!dirty[idx]) {
+		ssd.init();
+	}
+	else {
+		ssd.set(idx, cache[idx]);
+	}
+	return ssd.read(idx);
 }

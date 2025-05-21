@@ -1,7 +1,6 @@
 #include "ssd.h"
 
 SSD::SSD(void) {
-	init();
 }
 
 SSD::~SSD() {
@@ -61,11 +60,10 @@ void SSD::write(int idx, unsigned int value) {
 		std::cerr << "유효하지 않은 주소입니다!" << std::endl;
 		return;
 	}
-	storage[idx] = value;
 	if (!file.is_open()) {
-		std::cerr << "파일 생성에 실패했습니다!" << std::endl;
-		return;
+		init();
 	}
+	storage[idx] = value;
 
 	file.seekp((LINE_LENGTH + 1) * idx, std::ios::beg);
 	file << std::string(LINE_LENGTH - 1, ' ');
@@ -86,7 +84,6 @@ unsigned int SSD::read(int idx) {
 	}
 
 	outfile << "0x" << std::uppercase << hex << std::setw(8) << std::setfill('0') << storage[idx] << endl;
-	cout << "0x" << std::uppercase << hex << std::setw(8) << std::setfill('0') << storage[idx] << endl;
 	outfile.close();
 	return storage[idx];
 }
