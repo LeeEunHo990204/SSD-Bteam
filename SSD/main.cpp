@@ -57,6 +57,8 @@ int main(int argc, char* argv[]) {
 #else
 
 	CommandParser commandParser(argc, argv);
+	if (commandParser.isValid() == false)
+		return 1;
 	Buffer buffer;
 	CommandInfo commandinfo = commandParser.getCommandInfo();
 	DeviceController deviceController(&buffer.ssd, &buffer);

@@ -19,6 +19,12 @@ bool CommandParser::parse(int argc, char* argv[]) {
         commandInfo.address = std::stoi(argv[2]);
     }
 
+    if (argc == 3)
+    {
+        if (commandInfo.command != "R")
+            return false;
+    }
+
     if (argc == 4)
     {
         // [spec] lba range 에러 외에는 file에 error 적지 않음.
