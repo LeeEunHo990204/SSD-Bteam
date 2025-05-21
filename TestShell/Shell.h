@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include "CmdLancher.h"
 #include "TestScripts.h"
+#include "Logger.h"
 
 #define STORAGE_SIZE 100
 
