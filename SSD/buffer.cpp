@@ -260,7 +260,10 @@ void Buffer::updateBuffer(string cmd, int LBA, unsigned int value) {
 }
 
 unsigned int Buffer::readSSD(int idx) {
-	if (dirty[idx]) {
+	if (!dirty[idx]) {
+		ssd.init();
+	}
+	else {
 		ssd.set(idx, cache[idx]);
 	}
 	return ssd.read(idx);

@@ -1,7 +1,6 @@
 #include "ssd.h"
 
 SSD::SSD(void) {
-	init();
 }
 
 SSD::~SSD() {
