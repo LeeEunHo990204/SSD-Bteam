@@ -32,11 +32,11 @@ public:
 
 
 		if (file_size >= (1024 * 10)) {
-			saveLog();
+			saveLog(false);
 		}
 	}
 
-	void saveLog() {
+	void saveLog(bool is_exit) {
 		string logFileName;
 		logFileName = getTimeString4FileName();
 		if (mNewLogName.size() != 0) {
@@ -45,9 +45,12 @@ public:
 			else
 				rename((mLogPath + mNewLogName + ".log").c_str(), (mLogPath + mNewLogName + "_" + "sametime" + "_" + to_string(LogFileCnt) + ".zip").c_str());
 		}
-		rename((mLogPath + mLogName).c_str(), (mLogPath + logFileName + ".log").c_str());
-		LogFileCnt++;
-		mNewLogName = logFileName;
+		if (is_exit == false) {
+			rename((mLogPath + mLogName).c_str(), (mLogPath + logFileName + ".log").c_str());
+
+			LogFileCnt++;
+			mNewLogName = logFileName;
+		}
 	}
 
 private:
