@@ -5,13 +5,21 @@
 #include<string.h>
 
 #include "TestScripts.h"
-#include "CmdLancher.h"
+#include "CmdLauncher.h"
 
 typedef enum RUNNER_STATUS {
 	RUNNER_INIT = 0,
 	RUNNER_RUNNING,
 	RUNNER_DONE,
 	RUNNER_MAX
+};
+
+typedef enum RUNNER_ERROR {
+	RUNNER_INVALID_FILE_PATH = 1,
+	RUNNER_SCRIPT_FILE_OPEN_FAILED = 2,
+	RUNNER_PARSING_SCRIPTS_FAIL = 3,
+	RUNNER_EXECUTION_SCRIPTS_FAIL = 4,
+	RUNNER_FAIL_MAX
 };
 
 class Runner

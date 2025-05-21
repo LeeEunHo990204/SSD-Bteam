@@ -1,6 +1,6 @@
 #include "gmock/gmock.h"
 #include "Logger.h"
-#include "CmdLancher.h"
+#include "CmdLauncher.h"
 
 class MockLauncher : public ICmdLauncher {
 public:

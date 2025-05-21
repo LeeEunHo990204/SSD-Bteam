@@ -2,6 +2,8 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <map>
+#include <functional>
 
 static int isFilePathInvalid(std::string filePath) {
 	
@@ -27,35 +29,30 @@ int Runner::parseInputScripts() {
 	std::string line;
 
 	if (isFilePathInvalid(this->filePath)) {
-		return -1;
+		return -RUNNER_INVALID_FILE_PATH;
 	}
 
 	this->scriptsFile.open(this->filePath);
 	if (!this->scriptsFile.is_open()) {
 		std::cout << "Failed to open file: " << filePath << endl;
-		return -1;
+		return -RUNNER_SCRIPT_FILE_OPEN_FAILED;
 	}
 
+	const std::map<std::string, std::function<ITestScripts* (const std::string&, ICmdLauncher*)>> scriptFactory = {
+		{ "1_FullWriteAndReadCompare", [](const std::string& name, ICmdLauncher* launcher) { return new TestScripts1(name, launcher); } },
+		{ "2_PartialLBAWrite",         [](const std::string& name, ICmdLauncher* launcher) { return new TestScripts2(name, launcher); } },
+		{ "3_WriteReadAging",          [](const std::string& name, ICmdLauncher* launcher) { return new TestScripts3(name, launcher); } },
+		{ "4_EraseAndWriteAging",      [](const std::string& name, ICmdLauncher* launcher) { return new TestScripts4(name, launcher); } }
+	};
+
 	while (std::getline(this->scriptsFile, line)) {
-		if (line.compare("1_FullWriteAndReadCompare") == 0) {
+		auto it = scriptFactory.find(line);
+		if (it != scriptFactory.end()) {
 			++this->scriptsNum;
-			this->testScripts.push_back(new TestScripts1(line, &ssdLauncher));
+			this->testScripts.push_back(it->second(line, &ssdLauncher));
 		}
-		else if (line.compare("2_PartialLBAWrite") == 0) {
-			++this->scriptsNum;
-			this->testScripts.push_back(new TestScripts2(line, &ssdLauncher));
-		}
-		else if (line.compare("3_WriteReadAging") == 0) {
-			++this->scriptsNum;
-			this->testScripts.push_back(new TestScripts3(line, &ssdLauncher));
-		}
-		else if (line.compare("4_EraseAndWriteAging") == 0) {
-			++this->scriptsNum;
-			//TODO: Need to implement
-			//this->testScripts.push_back(new TestScripts3(line, &ssdLauncher));
-		} 
 		else {
-			
+			std::cout << "Invalid script name: " << line << std::endl;
 		}
 	}
 	

@@ -127,7 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CmdLancher.cpp" />
+    <ClCompile Include="CmdLauncher.cpp" />
     <ClCompile Include="Logger.h">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -151,7 +151,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CmdLancher.h" />
+    <ClInclude Include="CmdLauncher.h" />
     <ClInclude Include="Runner.h" />
     <ClInclude Include="Shell.h" />
     <ClInclude Include="test.h" />

@@ -29,14 +29,11 @@ public:
         string fileName = "SSD.exe";
         string command = fileName + " W " + to_string(LBA) + " 0x" + stream.str();
 
-        //cout << LBA << " " << val << endl;
-        //cout << LBA << " " << val << " " << command.c_str() << endl;
-
         LOGGING("Write LBA : " + to_string(LBA) + ", val : " + to_string(val));
         system(command.c_str());
     }
     string read(int LBA) override {
-        //system("cp)
+     
         string fileName = "SSD.exe";
         string command = fileName + " R " + to_string(LBA);
         LOGGING("Read LBA : " + to_string(LBA));
@@ -45,7 +42,7 @@ public:
         ifstream infile("ssd_output.txt");
         string data;
         infile >> data;
-        cout << "read : " << data << endl;
+        
         infile.close();
         return data;// system("SSD.exe R 3");//TODO
     }
