@@ -11,6 +11,10 @@ using namespace std;
 
 class Logger {
 public:
+    static Logger& getInstance() {
+        static Logger instance;
+        return instance;
+    }
 	void print(std::string className, std::string message) {
 		std::string timeString = getTimeString();
 
@@ -42,7 +46,11 @@ public:
     }
 
 private:
-    time_t mTimer = time(NULL);
+    Logger() {}
+    Logger(const Logger&) = delete;
+    Logger& operator=(const Logger&) = delete;
+
+    time_t mTimer = time(NULL);;
     ostringstream mDataBuffer;
     ofstream mFile;
     const string mLogPath = "../Log/";
