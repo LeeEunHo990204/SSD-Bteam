@@ -5,7 +5,7 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
-#include "CmdLancher.h"
+#include "CmdLauncher.h"
 #include "TestScripts.h"
 #include "Logger.h"
 

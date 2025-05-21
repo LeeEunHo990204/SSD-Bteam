@@ -1,5 +1,5 @@
 #include "gmock/gmock.h"
-#include "CmdLancher.h"
+#include "CmdLauncher.h"
 #include "TestScripts.h"
 #include "Runner.h"
 

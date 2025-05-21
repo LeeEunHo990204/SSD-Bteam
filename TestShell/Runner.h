@@ -5,7 +5,7 @@
 #include<string.h>
 
 #include "TestScripts.h"
-#include "CmdLancher.h"
+#include "CmdLauncher.h"
 
 typedef enum RUNNER_STATUS {
 	RUNNER_INIT = 0,
