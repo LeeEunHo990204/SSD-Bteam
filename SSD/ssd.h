@@ -22,6 +22,7 @@ public:
 	unsigned int read(int idx);
 	unsigned int get(int idx);
 	void set(int idx, unsigned int value);
+	bool isAddressValid(int idx);
 private:
 	SSD();
 	~SSD();
@@ -33,5 +34,4 @@ private:
 	void createNandTxtFile(void);
 	void updateStorageFromNandTxtFile(void);
 	bool eraseInNandTxtFile(int idx, int size);
-	bool isAddressValid(int idx);
 };

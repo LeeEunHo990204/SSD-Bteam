@@ -241,12 +241,15 @@ void Buffer::mergeBuffer(void) {
 }
 
 void Buffer::updateBuffer(string cmd, int LBA, unsigned int value) {
-	if (LBA < 0 || LBA > 99) {
+	if (!ssd.isAddressValid(LBA)) {
 		return;
 	}
+
 	if (cmd == "E" && value > 10) {
+		ssd.isAddressValid(-1);
 		return;
 	}
+
 	int idx = returnCmdBufferIndex();
 	if (idx == 5) {
 		flushBuffer();
