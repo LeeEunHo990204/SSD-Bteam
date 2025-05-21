@@ -269,7 +269,7 @@ TEST_F(BufferTest, mergeBufferTest) {
             buffer.cmdBuffer.push_back(testGroups[i][j]);
             buffer.updateBuffer(testGroups[i][j].cmd, testGroups[i][j].LBA, testGroups[i][j].value);
         }
-        for (int j = 0; j < 5; j++) {
+        for (int j = 0; j < MergeCmdNum; j++) {
             EXPECT_EQ(resultGroups[i][j].cmd, buffer.cmdBuffer[j].cmd);
             EXPECT_EQ(resultGroups[i][j].LBA, buffer.cmdBuffer[j].LBA);
             EXPECT_EQ(resultGroups[i][j].value, buffer.cmdBuffer[j].value);
