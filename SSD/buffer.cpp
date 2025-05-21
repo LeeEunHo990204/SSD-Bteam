@@ -67,7 +67,7 @@ void Buffer::convertTxtToCmd(void) {
 			return;
 		}
 
-		cmdBuffer.push_back({ parts[1], stoi(parts[2]), (unsigned int)stoi(parts[3]) });
+		cmdBuffer.push_back({ parts[1], stoi(parts[2]), stoul(parts[3]) });
 	}
 }
 
