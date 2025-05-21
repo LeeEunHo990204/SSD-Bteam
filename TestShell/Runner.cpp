@@ -51,8 +51,7 @@ int Runner::parseInputScripts() {
 		}
 		else if (line.compare("4_EraseAndWriteAging") == 0) {
 			++this->scriptsNum;
-			//TODO: Need to implement
-			//this->testScripts.push_back(new TestScripts3(line, &ssdLauncher));
+			this->testScripts.push_back(new TestScripts4(line, &ssdLauncher));
 		} 
 		else {
 			
