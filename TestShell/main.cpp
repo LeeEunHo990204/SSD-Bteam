@@ -1,12 +1,19 @@
 
 #include "gmock/gmock.h"
 #include <iostream>
+#include <signal.h>
+#include <fstream>
+#include <cstdlib>
 #include "Shell.h"
 #include "Runner.h"
+#include "Logger.h"
 using namespace testing;
 
 
-#include <iostream>
+void signalHandlerForProcessExit(int signum) {
+	Logger::getInstance().saveLog(true);
+	std::exit(signum);
+}
 
 int main(int argc, char** argv) {
 
@@ -15,6 +22,10 @@ int main(int argc, char** argv) {
 	return RUN_ALL_TESTS();
 #else
 	if (argc == 2) {
+		if (signal(SIGINT, signalHandlerForProcessExit) == SIG_ERR) {
+			std::cerr << "Failed to register signalHandlerForProcessExit" << std::endl;
+			return 0;
+		}
 		std::string filePath(argv[1]);
 		Runner* runner = new Runner(filePath);
 		if (runner->parseInputScripts() != 0) {
@@ -24,6 +35,11 @@ int main(int argc, char** argv) {
 		runner->runScripts();
 	}
 	else {
+		if (signal(SIGINT, signalHandlerForProcessExit) == SIG_ERR) {
+			std::cerr << "Failed to register signalHandlerForProcessExit" << std::endl;
+			return 0;
+		}
+
 		Shell* shell = new Shell(new SSDCmdLauncher, new TestScripts1());
 		shell->run();
 	}

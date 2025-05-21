@@ -213,6 +213,7 @@ public:
 		}
 
 		else if (command->cmd == "exit" || command->cmd == "EXIT") {
+			Logger::getInstance().saveLog(true);
 			return "EXIT";
 		}
 
