@@ -6,6 +6,7 @@ public:
 	MOCK_METHOD(void, write, (int LBA, unsigned int val), (override));
 	MOCK_METHOD(string, read, (int LBA), (override));
 	MOCK_METHOD(bool, erase, (int LBA, int size), (override));
+	MOCK_METHOD(void, flush, (), (override));
 };
 
 class TestScriptsFixture : public ::testing::Test

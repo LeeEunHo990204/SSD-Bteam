@@ -21,6 +21,9 @@ public:
 		}
 		return true;
 	}
+	void flush() override {
+		;
+	}
 private:
 	unsigned int array[STORAGE_SIZE] = { 0, };
 };
@@ -43,7 +46,7 @@ TEST_F(ShellFixture, invalid_cmd) {
 }
 
 TEST_F(ShellFixture, invalid_params_write) {
-	std::string actual = shell->runCommand("WRITE 1");
+	std::string actual = shell->runCommand("WRITE 1");	
 	EXPECT_EQ("INVALID COMMAND", actual);
 }
 
@@ -70,6 +73,16 @@ TEST_F(ShellFixture, read) {
 TEST_F(ShellFixture, erase) {
 	std::string actual = shell->runCommand("ERASE 1 5");
 	EXPECT_EQ("[Erase] Done", actual);
+}
+
+TEST_F(ShellFixture, flush) {
+	std::string actual = shell->runCommand("FLUSH");
+	EXPECT_EQ("[Flush] Done", actual);
+}
+
+TEST_F(ShellFixture, flush_invalid_arguments) {
+	std::string actual = shell->runCommand("FLUSH 1");
+	EXPECT_EQ("INVALID COMMAND", actual);
 }
 
 TEST_F(ShellFixture, testscripts1) {

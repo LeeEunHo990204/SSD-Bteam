@@ -19,6 +19,7 @@ public:
 			"read", "READ",
 			"erase", "ERASE",
 			"erase_range", "ERASE_RANGE",
+			"flush", "FLUSH",
 			"fullwrite", "FULLWRITE",
 			"fullread", "FULLREAD",
 			"1_", "1_FullWriteAndReadCompare",
@@ -33,6 +34,7 @@ public:
 			{"read", 1}, {"READ", 1},
 			{"erase", 2}, {"ERASE", 2},
 			{"erase_range", 2}, {"ERASE_RANGE", 2},
+			{"flush", 0}, {"FLUSH", 0},
 			{"fullwrite", 1}, {"FULLWRITE", 1},
 			{"fullread", 0}, {"FULLREAD", 0},
 			{"1_", 0}, {"1_FullWriteAndReadCompare", 0},
@@ -196,7 +198,7 @@ public:
 				cmdLauncher->erase(-1, -1);
 				return "[Erase_range] ERROR";
 			}
-			
+
 			if (startLBA > endLBA) {
 				swap(startLBA, endLBA);
 			}
@@ -210,6 +212,11 @@ public:
 			}
 
 			return "[Erase_range] Done";
+		}
+
+		else if (command->cmd == "flush" || command->cmd == "FLUSH") {
+			cmdLauncher->flush();
+			return "[Flush] Done";
 		}
 
 		else if (command->cmd == "exit" || command->cmd == "EXIT") {
