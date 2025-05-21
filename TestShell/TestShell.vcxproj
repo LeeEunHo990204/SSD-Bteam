@@ -146,6 +146,7 @@
     <ClCompile Include="TestScripts.cpp" />
     <ClCompile Include="test_cmdLauncher.cpp" />
     <ClCompile Include="test_scripts.cpp" />
+    <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Shell.h" />
     <ClInclude Include="test.h" />
     <ClInclude Include="TestScripts.h" />
+    <ClInclude Include="util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

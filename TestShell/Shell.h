@@ -8,6 +8,7 @@
 #include "CmdLauncher.h"
 #include "TestScripts.h"
 #include "Logger.h"
+#include "util.h"
 
 #define STORAGE_SIZE 100
 
@@ -68,11 +69,6 @@ private:
 
 	bool isValidValue(const std::string& val) {
 		return (val.length() == 10) && startsWith(val, "0x");
-	}
-
-	bool startsWith(const std::string& str, const std::string& prefix) {
-		return str.size() >= prefix.size() &&
-			str.compare(0, prefix.size(), prefix) == 0;
 	}
 };
 
@@ -308,15 +304,5 @@ private:
 		}
 
 		return result;
-	}
-
-	bool isOutOf4ByteRange(const std::string& hexStr) {
-		try {
-			unsigned long long value = std::stoull(hexStr, nullptr, 16);
-			return value > 0xFFFFFFFFULL;
-		}
-		catch (const std::exception&) {
-			return true;
-		}
 	}
 };
