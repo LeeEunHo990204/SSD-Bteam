@@ -25,6 +25,7 @@ int main(int argc, char** argv) {
 		std::cerr << "Failed to register signalHandlerForProcessExit" << std::endl;
 		return 0;
 	}
+	system("mkdir Log");
 	if (argc == 2) {
 		std::string filePath(argv[1]);
 		Runner* runner = new Runner(filePath);
