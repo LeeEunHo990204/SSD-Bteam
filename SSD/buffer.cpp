@@ -185,7 +185,11 @@ void Buffer::resetBuffer(void) {
 
 void Buffer::flushBuffer(void) {
 	for (int i = 0;i < STORAGE_SIZE;i++) {
-		ssd.write(i, ssd.get(i));
+		if (dirty[i]) {
+			ssd.write(i, cache[i]);
+			cache[i] = 0;
+			dirty[i] = 0;
+		}
 	}
 	resetBuffer();
 	convertCmdToTxt();

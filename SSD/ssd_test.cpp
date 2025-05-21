@@ -11,6 +11,13 @@ using namespace std;
 
 
 class SsdTestFixture : public Test {
+private:
+	void SetUp(void) {
+		ssd.init();
+		buffer.ssd.init();
+	}
+	void TearDown(void) {
+	}
 public:
 	SSD ssd;
 	Buffer buffer;
@@ -170,7 +177,4 @@ TEST_F(SsdTestFixture, DeviceControllerValidWriteAndReadTest)
 	commandInfo = parser.getCommandInfo();
 
 	EXPECT_EQ(deviceController.run(commandInfo), 0);	// run 수행 결과 이상 없음 확인
-
-	
-
 }
