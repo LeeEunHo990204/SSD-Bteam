@@ -202,10 +202,50 @@ int Buffer::returnCmdBufferIndex(void) {
 }
 
 void Buffer::mergeBuffer(void) {
+	vector<pair<int, unsigned int>> E;
+	vector<pair<int, unsigned int>> W;
+	int i, j;
+	int idx = 0;
+	for (i = 0; i < STORAGE_SIZE; i++) {
+		if (dirty[i]) {
+			if (cache[i]) {
+				W.push_back({ i, cache[i] });
+				continue;
+			}
 
+			for (j = 1; j < 10 && i + j < STORAGE_SIZE; j++) {
+				if (!dirty[i + j]) {
+					break;
+				}
+				if (cache[i + j]) {
+					W.push_back({ i + j, cache[i + j] });
+					continue;
+				}
+			}
+
+			E.push_back({ i, j });
+			i += j - 1;
+		}
+	}
+	for (auto& e : E) {
+		cmdBuffer[idx++] = { "E", e.first, e.second };
+	}
+	for (auto& w : W) {
+		cmdBuffer[idx++] = { "W", w.first, w.second };
+	}
+
+	for (i = idx; i < 5; i++) {
+		cmdBuffer[i] = { "", 0, 0 };
+	}
 }
 
 void Buffer::updateBuffer(string cmd, int LBA, unsigned int value) {
+	if (LBA < 0 || LBA > 99) {
+		return;
+	}
+	if (cmd == "E" && value > 10) {
+		return;
+	}
 	int idx = returnCmdBufferIndex();
 	if (idx == 5) {
 		flushBuffer();
@@ -213,10 +253,10 @@ void Buffer::updateBuffer(string cmd, int LBA, unsigned int value) {
 	}
 
 	cmdBuffer[idx] = { cmd, LBA, value };
+	updateCache();
 	mergeBuffer();
 	convertCmdToTxt();
 	writeBuffer();
-	updateCache();
 }
 
 unsigned int Buffer::readSSD(int idx) {
