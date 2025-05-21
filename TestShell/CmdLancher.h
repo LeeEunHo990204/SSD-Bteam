@@ -43,7 +43,6 @@ public:
         ifstream infile("ssd_output.txt");
         string data;
         infile >> data;
-        cout << "read : " << data << endl;
         infile.close();
         return data;// system("SSD.exe R 3");//TODO
     }
@@ -53,7 +52,6 @@ public:
         string fileName = "SSD.exe";
         std::stringstream command;
         command << fileName << " E " << LBA << " " << size;
-        cout << command.str() << endl;
 
         system(command.str().c_str());
         if ((LBA > MAX_LBA) || (LBA < 0) || size < 0 || size > 10)
