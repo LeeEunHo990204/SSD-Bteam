@@ -26,6 +26,9 @@ public:
         }
         return true;
     }
+    void flush() override {
+        ;
+    }
 private:
     std::string array[100] = { "", };
 };

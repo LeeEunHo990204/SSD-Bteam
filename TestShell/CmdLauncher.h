@@ -18,6 +18,7 @@ public:
     virtual void write(int LBA, unsigned int val) = 0;
     virtual string read(int LBA) = 0;
     virtual bool erase(int LBA, int size) = 0;
+    virtual void flush() = 0;
 };
 
 class SSDCmdLauncher : public ICmdLauncher {
@@ -59,6 +60,18 @@ public:
         if ((LBA > MAX_LBA) || (LBA < 0) || size < 0 || size > 10)
             return false;
         return true;
+    }
+    void flush() override {
+        std::stringstream stream;
+        
+        string fileName = "SSD.exe";
+        string command = fileName + " F ";
+
+        //cout << LBA << " " << val << endl;
+        //cout << LBA << " " << val << " " << command.c_str() << endl;
+
+        system(command.c_str());
+
     }
 private:
     const string filename = "ssd_nand.txt";
