@@ -61,7 +61,7 @@ private:
 	time_t mTimer = time(NULL);
 	ostringstream mDataBuffer;
 	ofstream mFile;
-	const string mLogPath = "../Log/";
+	const string mLogPath = "./Log/";
 	const string mLogName = "latest.log";
 	string mNewLogName = "";
 
