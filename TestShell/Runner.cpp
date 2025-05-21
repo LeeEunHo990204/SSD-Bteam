@@ -27,13 +27,13 @@ int Runner::parseInputScripts() {
 	std::string line;
 
 	if (isFilePathInvalid(this->filePath)) {
-		return -1;
+		return -RUNNER_INVALID_FILE_PATH;
 	}
 
 	this->scriptsFile.open(this->filePath);
 	if (!this->scriptsFile.is_open()) {
 		std::cout << "Failed to open file: " << filePath << endl;
-		return -1;
+		return -RUNNER_SCRIPT_FILE_OPEN_FAILED;
 	}
 
 	while (std::getline(this->scriptsFile, line)) {
