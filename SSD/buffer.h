@@ -33,6 +33,7 @@ public:
 	void readBuffer(void);
 	void writeBuffer(void);
 	void flushBuffer(void);
+	unsigned int readSSD(int idx);
 	SSD ssd;
 #if !_DEBUG
 private:
@@ -41,6 +42,8 @@ private:
 	vector<CmdBuffer> cmdBuffer;
 	const string dirName = "buffer";
 	const string txtPath = dirName + "\\ * .txt";
+	unsigned int cache[STORAGE_SIZE] = { 0, };
+	int dirty[STORAGE_SIZE] = { 0, };
 	bool isBufferDir(void) {
 		return _access(dirName.c_str(), 0) == 0;
 	}
@@ -52,7 +55,7 @@ private:
 	void resetBuffer(void);
 	int returnCmdBufferIndex(void);
 	void mergeBuffer(void);
-	void updateStorage(void);
+	void updateCache(void);
 
 	string toHexString(unsigned int value) {
 		stringstream ss;
