@@ -19,10 +19,7 @@ int main(int argc, char* argv[]) {
 	Buffer buffer(ssd);
 	CommandInfo commandinfo = commandParser.getCommandInfo();
 	BufferController bufferController(&buffer);
-	
-	if (!commandParser.isValid()) {
-		return 0;
-	}
+
 	return bufferController.run(commandinfo);
 #endif
 }
