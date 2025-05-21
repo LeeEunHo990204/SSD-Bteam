@@ -135,6 +135,7 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="Shell.cpp" />
     <ClCompile Include="test_logger.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -146,6 +147,7 @@
     <ClCompile Include="TestScripts.cpp" />
     <ClCompile Include="test_cmdLauncher.cpp" />
     <ClCompile Include="test_scripts.cpp" />
+    <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -156,6 +158,7 @@
     <ClInclude Include="Shell.h" />
     <ClInclude Include="test.h" />
     <ClInclude Include="TestScripts.h" />
+    <ClInclude Include="util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -53,7 +53,6 @@ public:
         string fileName = "SSD.exe";
         std::stringstream command;
         command << fileName << " E " << LBA << " " << size;
-        cout << command.str() << endl;
 
         LOGGING("Erase LBA : " + to_string(LBA) + ", size : " + to_string(size));
         system(command.str().c_str());
