@@ -67,11 +67,11 @@ int Runner::runScripts() {
 
 	for (auto scriptPtr : this->getTestScripts()) {
 
-		std::cout << std::left << std::setw(40) << scriptPtr->getName() << " ___ Run...";
+		std::cout << std::left << std::setw(40) << scriptPtr->getName() << " ___ Run..." <<std::flush;
 		scriptPtr->runTestScenario();
 		if (scriptPtr->getResult() == 0) {
 			//script pass
-			std::cout << "Pass";
+			std::cout << "Pass" << std::flush;
 		}
 		else {
 			//script fail
