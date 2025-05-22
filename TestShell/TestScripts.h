@@ -96,3 +96,23 @@ public:
 
 	void runTestScenario() override;
 };
+
+class TestScripts5 : public ITestScripts
+{
+public:
+	TestScripts5() : ITestScripts("TestScript5") {}
+	TestScripts5(std::string name) : ITestScripts(name) {}
+	TestScripts5(std::string name, ICmdLauncher* cmdLauncher) : ITestScripts(name, cmdLauncher) {}
+
+	void runTestScenario() override;
+};
+
+class TestScripts6 : public ITestScripts
+{
+public:
+	TestScripts6() : ITestScripts("TestScript6") {}
+	TestScripts6(std::string name) : ITestScripts(name) {}
+	TestScripts6(std::string name, ICmdLauncher* cmdLauncher) : ITestScripts(name, cmdLauncher) {}
+
+	void runTestScenario() override;
+};

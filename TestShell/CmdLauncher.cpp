@@ -59,3 +59,7 @@ string ShellDeviceDriver::read(int LBA) {
 bool ShellDeviceDriver::erase(int LBA, int size) {
     return m_cmdLauncher->erase(LBA, size);
 }
+
+void ShellDeviceDriver::flush() {
+    return m_cmdLauncher->flush();
+}

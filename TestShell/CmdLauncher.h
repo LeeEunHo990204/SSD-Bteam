@@ -39,6 +39,7 @@ public:
     void write(int LBA, unsigned int val);
     string read(int LBA);
     bool erase(int LBA, int size);
+    void flush();
 protected:
     ICmdLauncher* m_cmdLauncher;
 };

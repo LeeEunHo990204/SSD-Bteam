@@ -26,6 +26,8 @@ public:
 			"2_", "2_PartialLBAWrite",
 			"3_", "3_WriteReadAging",
 			"4_", "4_EraseAndWriteAging",
+			"5_", "5_Test",
+			"6_", "6_Test",
 			"exit", "EXIT",
 			"help", "HELP"
 		};
@@ -40,7 +42,9 @@ public:
 			{"1_", 0}, {"1_FullWriteAndReadCompare", 0},
 			{"2_", 0}, {"2_PartialLBAWrite", 0},
 			{"3_", 0}, {"3_WriteReadAging", 0},
-			{"4_", 0 }, {"4_EraseAndWriteAging", 0}
+			{"4_", 0 }, {"4_EraseAndWriteAging", 0},
+			{"5_", 0 }, {"5_Test", 0},
+			{"6_", 0 }, {"6_Test", 0},
 		};
 	}
 

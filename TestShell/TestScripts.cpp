@@ -67,3 +67,41 @@ void TestScripts4::runTestScenario() {
 		}
 	}
 }
+
+void TestScripts5::runTestScenario() {
+	int a;
+	getShellDev()->flush();
+	cin >> a;
+	cin.ignore();
+	cout << "erase 0 2" << endl;
+	getShellDev()->erase(0, 2);
+	cin >> a;
+	cin.ignore();
+	cout << "write 2 0x00000003" << endl;
+	getShellDev()->write(2, 3);
+	cin >> a;
+	cin.ignore();
+	cout << "erase 3 2" << endl;
+	getShellDev()->erase(3, 2);
+}
+
+void TestScripts6::runTestScenario() {
+	int a;
+	getShellDev()->flush();
+	cin >> a;
+	cin.ignore();
+	cout << "erase 0 10" << endl;
+	getShellDev()->erase(0, 10);
+	cin >> a;
+	cin.ignore();
+	cout << "erase 10 2" << endl;
+	getShellDev()->erase(10, 2);
+	cin >> a;
+	cin.ignore();
+	cout << "write 0 0x00000001" << endl;
+	getShellDev()->write(0, 1);
+	cin >> a;
+	cin.ignore();
+	cout << "write 1 0x00000002" << endl;
+	getShellDev()->write(1, 2);
+}

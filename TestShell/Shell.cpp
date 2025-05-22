@@ -50,4 +50,18 @@ std::string Shell::runCommand(std::string cmdLine) {
 		if (testScripts->getResult() == 0) return "PASS";
 		return "FAIL";
 	}
+
+	else if (command->cmd == "5_" || command->cmd == "5_Test") {
+		setTestScripts(new TestScripts5("5_Test", cmdLauncher));
+		testScripts->runTestScenario();
+		if (testScripts->getResult() == 0) return "PASS";
+		return "FAIL";
+	}
+
+	else if (command->cmd == "6_" || command->cmd == "6_Test") {
+		setTestScripts(new TestScripts6("6_Test", cmdLauncher));
+		testScripts->runTestScenario();
+		if (testScripts->getResult() == 0) return "PASS";
+		return "FAIL";
+	}
 }
